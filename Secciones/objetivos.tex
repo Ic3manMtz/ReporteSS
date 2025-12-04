@@ -1,0 +1,83 @@
+\section{Objetivos}
+\noindent El objetivo principal del proyecto es obtener una caracterización estadística de las trayectorias individuales a partir de un conjunto de datos de movilidad. \\
+
+\noindent Los objetivos particulares son:
+\begin{itemize}
+	\item Caracterizar la base de datos para extraer las trayectorias contenidas.
+	\item Aplicar un modelo de inteligencia artificial para identificar y analizar dichas trayectorias.
+\end{itemize}
+
+\section{Metodología}
+El proceso se dividió en las siguientes etapas: \\
+
+{\Large\bfseries 1. Caracterización inicial}
+\begin{itemize}
+	\item Exploración del conjunto de datos, identificación de columnas y filas irrelevantes.
+	\item Conteo de registros y dimensiones del dataset.
+	\item Inspección de valores únicos y estructura general.
+\end{itemize}
+
+\vspace{0.5cm}
+{\Large\bfseries 2. Depuración de columnas}
+\begin{itemize}
+	\item Selección de campos relevantes para el análisis.
+	\item Eliminación de columnas redundantes o sin valor analítico.
+	\item Conservación de columnas clave: identificador, timestamp, coordenadas, precisión GPS.
+\end{itemize}
+
+\vspace{0.5cm}
+{\Large\bfseries 3. Depuración de filas}
+\begin{itemize}
+	\item Eliminación de registros duplicados basados en identificador, timestamp y coordenadas.
+	\item Filtrado de registros con baja precisión GPS mayor a 20 metros.
+	\item Análisis de frecuencia de aparición de identificadores únicos.
+\end{itemize}
+
+\vspace{0.5cm}
+{\Large\bfseries 4. Análisis descriptivo}
+\begin{itemize}
+	\item Distribución de individuos por día mediante histogramas temporales.
+	\item Cálculo de frecuencia de aparición y persistencia temporal.
+	\item Identificación de individuos con registros en múltiples días.
+\end{itemize}
+
+\newpage
+{\Large\bfseries 5. Filtrado por velocidades peatonales}
+\begin{itemize}
+	 \item Cálculo de velocidades entre puntos consecutivos.
+	 \item Creación de histograma de distribución de velocidades.
+	 \item Aplicación de filtro peatonal utilizando parámetros estadísticos:
+	 \begin{itemize}
+	 	\item Media de velocidad peatonal: 1.34 m/s
+	 	\item Desviación estándar: 0.37 m/s
+	 	\item Rango aceptable: 0.6-2.08 m/s (media \(\pm\) desviaciones estándar)
+	 \end{itemize}
+	 \item Segmentación de trayectorias para eliminar puntos fuera del rango peatonal
+\end{itemize}
+
+\vspace{0.5cm}
+{\Large\bfseries 6. Mapa geográfico de trayectorias}
+\begin{itemize}
+	\item Mapa de distribución de puntos de recorrido por ciudad.
+	\item Visualización de trayectorias individuales completas.
+	\item Implementación de algoritmo de clustering sobre puntos de velocidad peatonal.
+\end{itemize}
+
+\vspace{0.5cm}
+{\Large\bfseries 7. Modelado de parámetros de movilidad}
+\begin{itemize}
+	\item Cálculo de longitud de vuelo entre puntos consecutivos.
+	\item Cálculo de tiempos de pausa.
+\end{itemize}
+
+\vspace{0.5cm}
+{\Large\bfseries 8. Evaluación de calidad}
+\begin{itemize}
+	\item Desarrollo de algoritmo de puntuación compuesta basado en métricas 
+	\item Clasificación de trayectorias en categorías cualitativas.
+\end{itemize}
+
+
+
+
+

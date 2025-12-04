@@ -1,0 +1,19 @@
+\section{Elementos de un modelo de movilidad}
+Un modelo de movilidad describe el desplazamiento de individuos o grupos en el espacio y el tiempo. Este proyecto se enfoca en trayectorias peatonales individuales, definidas por:
+\begin{itemize}
+	\item \textbf{Puntos de recorrido}: Ubicaciones específicas por las que transita el individuo.
+	\item \textbf{Tiempos de pausa}: Intervalos durante los cuales el individuo permanece detenido en un mismo punto de recorrido.
+	\item \textbf{Longitud de vuelo}: Distancia entre dos puntos de recorrido consecutivos.
+\end{itemize}
+
+A continuación se muestran la determinación de cada uno de estos elementos.
+
+\subsection{Punto de recorrido}
+Cada punto de recorrido se determinó a partir de los registros GPS contenidos en el conjunto de datos, específicamente mediante las coordenadas geográficas \textit{device\_lat} y \textit{device\_lon}. Para garantizar la calidad de estos puntos, se aplicó un filtro de precisión GPS, considerando únicamente aquellos registros con \textit{device\_horizontal\_accuracy} menor a 10 metros, correspondiente a la precisión satelital. 
+
+\subsection{Tiempos de pausa}
+Para determinar estos tiempos de pausa, se analizó la secuencia temporal de cada individuo. Cuando dos registros consecutivos presentaban coordenadas idénticas (o variaciones menores a un umbral de 0.001 grados, aproximadamente 111 metros), se interpretó que el individuo permaneció en pausa entre dichos registros. \\
+Adicionalmente, como no es posible saber en que parte del intervalo se encuentra el primer punto de recorrido registrado. Para calcular los tiempos de pausa se asume que el primer punto de recorrido es cuando el individuo llegó a dicho punto. Esto aunque es una simplificación es de mucha utilidad para los objetivos del proyecto.
+
+\subsection{Longitud de vuelo}
+Para calcular la distancia entre dos puntos de recorrido, se utiliza la fórmula de Haversine aplicada a las coordenadas geográficas de registros sucesivos de un mismo individuo. Solo se consideraron desplazamientos significativos, definidos como aquellos donde el cambio de coordenadas superó un umbral de 0.001 grados (aproximadamente 111 metros). Este filtro permite distinguir entre movimientos reales y variaciones menores debidas al error de medición del GPS. 

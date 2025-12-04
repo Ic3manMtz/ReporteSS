@@ -1,0 +1,1153 @@
+\label{anexo:scripts}
+
+En la sección \ref{sec:caracterizacion} se describen los pasos del proceso de caracterización de datos de trayectorias individuales. En este anexo se presentan los scripts utilizados para llevar a cabo dicho proceso.
+
+% --------------------------
+% Exploración inicial del conjunto de datos
+% --------------------------
+\begin{lstlisting}[
+  language=Python,
+  caption={csv\_glance.py, exploración inicial del conjunto de datos.},
+  label={cod:csv_glance}
+  ]
+  import dask.dataframe as dd
+  import sys 
+
+  print("Exploracion inicial de datos con Dask\n")
+
+  if len(sys.argv) < 2:
+      print("Error: Debe especificar un archivo CSV")
+      sys.exit(1)
+
+  ruta_archivo = sys.argv[1]
+
+  ddf = dd.read_csv(
+      ruta_archivo,
+      encoding="utf-8",  
+      sep=",",           
+      dtype="object",    
+  )
+
+  columnas = ddf.columns.tolist()
+
+  print("Columnas y 2 ejemplos por cada una:\n")
+  for col in columnas:
+      ejemplos = ddf[col].head(2).values.tolist()
+      print(f"- {col}: {ejemplos}")
+
+  input("Presiona Enter para continuar...")
+\end{lstlisting}
+\vfill
+
+% --------------------------
+% Conteo de registros en el conjunto de datos
+% --------------------------
+\begin{lstlisting}[
+  language=Python,
+  caption={csv\_count\_registers.py, conteo de registros en el conjunto de datos.},
+  label={cod:csv_count}
+  ] 
+  import dask.dataframe as dd
+  import sys
+  import os
+
+  def contar_registros(ruta_archivo):
+
+      columnas_usar = ["record_id"]
+      try:
+          print(f"\nCargando archivo {ruta_archivo}...")
+          ddf = dd.read_csv(
+              ruta_archivo,
+              usecols=columnas_usar,
+              sep=",",
+              dtype={"record_id": "str"},
+              blocksize="256MB",
+          )
+
+          print("Contando registros (paciencia para archivos grandes)...")
+          total_registros = ddf.shape[0].compute()
+
+          print(f"\nAnalisis completado:")
+          print(f"Archivo analizado: {ruta_archivo}")
+          print(f"Total de registros: {total_registros:,}")
+
+      except Exception as e:
+          print(f"\nOcurrio un error inesperado: {str(e)}")
+
+  if __name__ == "__main__":
+      print("=== Contador de registros en archivos CSV grandes ===")
+
+      if len(sys.argv) < 2:
+          print("Uso: python csv_count_registers.py <nombre_del_archivo.csv>")
+          sys.exit(1)
+
+      archivo = sys.argv[1]
+      contar_registros(archivo)
+\end{lstlisting}
+\vfill
+
+% --------------------------
+% Eliminación de campos innecesarios
+% --------------------------
+\begin{lstlisting}[
+  language=Python,
+  caption={remove\_columns.py, eliminación de campos innecesarios en el conjunto de datos.},
+  label={cod:csv_slim}
+  ]
+  import dask.dataframe as dd
+
+  columnas_deseadas = [
+    'identifier',
+    'timestamp',
+    'device_lat',
+    'device_lon',
+    'device_horizontal_accuracy',
+    'record_id',
+    'time_zone_name'
+  ]
+
+  df = dd.read_csv('Mobility_Data.csv', usecols=columnas_deseadas)
+
+  df.to_csv('Mobility_Data_Slim.csv', index=False, single_file=True, encoding='utf-8-sig')
+\end{lstlisting}
+\vfill
+
+% --------------------------
+% Obtención de valores únicos
+% --------------------------
+\begin{lstlisting}[
+  language=Python,
+  breaklines=true,
+  caption={unique\_values.py, obtención de valores únicos de la columna 'device\_horizontal\_accuracy'.},
+  label={cod:unique_values}
+  ]
+  import pandas as pd
+  from tqdm import tqdm
+  import os
+  import sys
+  from src.menus.menu import MainMenu
+  def main():
+      print("\n" + "="*50)
+      print(" EXTRACTOR DE VALORES UNICOS DE COLUMNAS CSV")
+      print("="*50 + "\n")
+
+      if len(sys.argv) < 2:
+          print("Uso: python extract_unique.py <archivo.csv>")
+          sys.exit(1)
+
+      csv_file = sys.argv[1]
+
+      if not os.path.exists(csv_file):
+          print(f"Error: El archivo '{csv_file}' no existe.")
+          sys.exit(1)
+
+      chunk_size = 1_000_000
+
+      try:
+          available_columns = pd.read_csv(csv_file, nrows=0).columns.tolist()
+      except Exception as e:
+          print(f"Error leyendo el archivo: {e}")
+          sys.exit(1)
+
+      try:
+          selected_index = MainMenu.display_available_columns(available_columns)
+          target_column = available_columns[selected_index]
+      except (ValueError, IndexError):
+          print("Seleccion invalida.")
+          sys.exit(1)
+      except Exception as e:
+          print(f"Error inesperado al seleccionar columna: {e}")
+          sys.exit(1)
+
+      safe_column_name = target_column.replace(" ", "_").replace("/", "_")
+      output_file = f"valores_unicos_{safe_column_name}.txt"
+
+      unique_values = set()
+      print(f"\nProcesando columna: {target_column}\n")
+
+      try:
+          for chunk in tqdm(pd.read_csv(csv_file, usecols=[target_column], chunksize=chunk_size)):
+              unique_values.update(chunk[target_column].dropna().astype(str))
+      except Exception as e:
+          print(f"Error durante el procesamiento: {e}")
+          sys.exit(1)
+
+      try:
+          numeric_values = sorted([float(v) for v in unique_values])
+          is_numeric = True
+      except ValueError:
+          is_numeric = False
+
+      try:
+          with open(output_file, "w", encoding="utf-8") as f:
+              if is_numeric:
+                  min_val = numeric_values[0]
+                  max_val = numeric_values[-1]
+                  f.write(f"# Rango de valores: {min_val} - {max_val}\n")
+                  f.write("\n".join(str(v) for v in numeric_values))
+              else:
+                  sorted_values = sorted(unique_values)
+                  f.write("# Rango de valores: No numerico\n")
+                  f.write("\n".join(sorted_values))
+      except Exception as e:
+          print(f"Error guardando los resultados: {e}")
+          sys.exit(1)
+
+      print(f"\nSe encontraron {len(unique_values):,} valores unicos.")
+      print(f"Resultados guardados en: {output_file}")
+
+      print("\nMuestra de valores unicos (primeros 10):")
+      print("\n".join(sorted(unique_values)[:10]))
+
+  if __name__ == "__main__":
+      main()
+\end{lstlisting}
+\vfill
+
+% --------------------------
+% Histograma 'device\_horizontal\_accuracy'
+% --------------------------
+\begin{lstlisting}[
+  language=Python,
+  caption={accuracy\_histogram.py, creación de un histograma de frecuencias de la columna 'device\_horizontal\_accuracy'.},
+  label={cod:accuracy_histogram}
+  ]
+    import os
+    import pandas as pd
+    import matplotlib.pyplot as plt
+    import numpy as np
+    import sys
+    from tqdm import tqdm
+
+    def classify_tech(valor):
+        if 1 <= valor <= 20:
+            return 'GPS Satelital'
+        elif 5 <= valor <= 50:
+            return 'A-GPS (Asistido por red)'
+        elif 20 <= valor <= 500:
+            return 'Triangulacion WiFi/Redes Moviles'
+        else:
+            return 'Fuera de rango'
+
+    def format_count(count):
+        if count >= 1_000_000:
+            return f"{count/1_000_000:.1f}M"
+        elif count >= 1_000:
+            return f"{count/1_000:.1f}K"
+        return str(count)
+
+    def main():
+        if len(sys.argv) < 2:
+            print("Error: Debe especificar un archivo CSV como argumento")
+            sys.exit(1)
+
+        csv_file = sys.argv[1]
+        filename = os.path.splitext(os.path.basename(csv_file))[0]
+        column = "device_horizontal_accuracy"  
+        bins = 100
+        
+        print(f"\nIniciando procesamiento del archivo: {csv_file}")
+        print(f"Columna analizada: {column}")
+        
+        os.makedirs("img", exist_ok=True)
+        print("Directorio 'img' verificado/creado")
+
+        print("\nProcesando datos y clasificando tecnologias...")
+        frequency = pd.Series(dtype=float)
+        tech_counts = {
+            'GPS Satelital': 0,
+            'A-GPS (Asistido por red)': 0,
+            'Triangulacion WiFi/Redes Moviles': 0,
+            'Fuera de rango': 0
+        }
+
+        total_row = sum(1 for _ in pd.read_csv(csv_file, usecols=[column], chunksize=1_000_000))
+        
+        with tqdm(total=total_row, unit='M rows') as pbar:
+            for chunk in pd.read_csv(csv_file, usecols=[column], chunksize=1_000_000):
+                chunk_clean = chunk[column].dropna()
+                
+                for valor in chunk_clean:
+                    tech = classify_tech(valor)
+                    tech_counts[tech] += 1
+                
+                counts = chunk_clean.value_counts()
+                if not frequency.empty or not counts.empty:
+                    frequency = pd.concat([frequency, counts], axis=0).groupby(level=0).sum()
+                pbar.update(1)
+
+        total = sum(tech_counts.values())
+        percentage = {k: (v/total)*100 for k, v in tech_counts.items()}
+
+        print("\nGenerando histograma con estadIsticas...")
+        counts, edges = np.histogram(frequency.index, bins=bins, weights=frequency.values)
+
+        plt.figure(figsize=(14, 8))
+        plt.bar(edges[:-1], counts, width=np.diff(edges), align='edge', edgecolor='black', alpha=0.7)
+        
+        plt.axvline(x=20, color='r', linestyle='--', alpha=0.5)
+        plt.axvline(x=50, color='g', linestyle='--', alpha=0.5)
+        plt.axvline(x=200, color='b', linestyle='--', alpha=0.5)
+        
+        gps_str = f"GPS Satelital: {percentage['GPS Satelital']:.2f}%\n({format_count(tech_counts['GPS Satelital'])} reg)"
+        agps_str = f"A-GPS: {percentage['A-GPS (Asistido por red)']:.2f}%\n({format_count(tech_counts['A-GPS (Asistido por red)'])} reg)"
+        wifi_str = f"WiFi/Redes: {percentage['Triangulacion WiFi/Redes Moviles']:.2f}%\n({format_count(tech_counts['Triangulacion WiFi/Redes Moviles'])} reg)"
+        
+        plt.text(10, max(counts)*0.9, gps_str, ha='center', color='r', fontsize=10, 
+                bbox=dict(facecolor='white', alpha=0.8, edgecolor='r'))
+        plt.text(40, max(counts)*0.8, agps_str, ha='center', color='g', fontsize=10, 
+                bbox=dict(facecolor='white', alpha=0.8, edgecolor='g'))
+        plt.text(190, max(counts)*0.7, wifi_str, ha='center', color='b', fontsize=10, 
+                bbox=dict(facecolor='white', alpha=0.8, edgecolor='b'))
+
+        
+        plt.title(f"DistribuciOn de precisiones de {column}\nArchivo: {filename}", fontsize=14)
+        plt.xlabel(f"Valores de {column} (metros)", fontsize=12)
+        plt.ylabel("Frecuencia (Millones)", fontsize=12)
+        plt.xticks(edges[::5], rotation=45)
+        plt.grid(axis='y', linestyle='--')
+        plt.tight_layout()
+
+        output_path = os.path.join("img", f"histograma_{column}_{filename}.png")
+        plt.savefig(output_path, dpi=300, bbox_inches='tight')
+        plt.close()
+        
+        print("\n=== DISTRIBUCION DE TECNOLOGIAS DE GEOLOCALIZACION ===")
+        for tech, count in tech_counts.items():
+            print(f"{tech}: {count:,} registros ({percentage[tech]:.2f}%)")
+        
+        print(f"\nHistograma generado exitosamente")
+        print(f"Archivo guardado en: {output_path}")
+        print(f"Total registros analizados: {total:,}\n")
+
+        if __name__ == "__main__":
+        main()
+\end{lstlisting}
+\vfill
+
+% --------------------------
+% Histograma de frecuencias de la columna 'identifier'
+% --------------------------
+\begin{lstlisting}[
+    language=Python,
+    caption={identifier\_histogram.py, creación de un histograma de frecuencias de la columna 'identifier'.},
+    label={cod:identifier_histogram}
+    ]
+    import os
+    import pandas as pd
+    import matplotlib.pyplot as plt
+    import numpy as np
+    from collections import Counter
+    import sys
+    from tqdm import tqdm
+    import math
+
+    def format_count(count):
+        if count >= 1_000_000:
+            return f"{count/1_000_000:.1f}M"
+        elif count >= 1_000:
+            return f"{count/1_000:.1f}K"
+        return str(count)
+
+    def main():
+        if len(sys.argv) < 2:
+            print("Error: Debe especificar un archivo CSV como argumento")
+            sys.exit(1)
+
+        csv_file = sys.argv[1]
+        filename = os.path.splitext(os.path.basename(csv_file))[0]
+        column = "identifier"  
+        chunksize = 1_000_000
+        
+        print(f"\nIniciando procesamiento del archivo: {csv_file}")
+        print(f"Columna analizada: {column}")
+        os.makedirs("img", exist_ok=True)
+        print("Directorio 'img' verificado/creado")
+
+        print("\nProcesando datos y contando frecuencias...")
+        counter = Counter()
+        
+        total_chunks = sum(1 for _ in pd.read_csv(csv_file, usecols=[column], chunksize=chunksize))
+        
+        with tqdm(total=total_chunks, unit=' chunk') as pbar:
+            for chunk in pd.read_csv(csv_file, usecols=[column], chunksize=chunksize):
+                counter.update(chunk[column].dropna().astype(str))
+                pbar.update(1)
+
+        frecuency = pd.Series(counter)
+        total_unique_values = len(frecuency)
+        max_freq = frecuency.max()
+        
+        print(f"Datos procesados correctamente")
+        print(f"Total de valores Unicos: {total_unique_values:,}")
+        print(f"Frecuencia maxima: {max_freq:,}")
+
+        bins = [0] + [10**i for i in range(0, int(np.log10(max_freq)) + 2)]  
+        group_freq = pd.cut(frecuency, bins=bins, right=False).value_counts().sort_index()
+
+        total_ocurrence = frecuency.sum()
+        percentage_per_range = (group_freq / total_unique_values * 100).round(2)
+        
+        print("\nGenerando histograma con estadisticas...")
+        plt.figure(figsize=(16, 9)) 
+        ax = group_freq.plot(kind='bar', logy=True, alpha=0.7, edgecolor='black')
+        
+        formatted_labels = []
+        for interval in group_freq.index.categories:
+            left = int(interval.left)
+            right = int(interval.right - 1)
+            formatted_labels.append(f"{left}-{right}" if left != right else f"{left}")
+        
+        plt.xticks(range(len(formatted_labels)), formatted_labels, rotation=45, ha='right')
+        
+        plt.title(f"Histograma de Frecuencias de Identificadores\nArchivo: {filename}", fontsize=16, pad=20)
+        plt.xlabel("Rango de Frecuencia", fontsize=14)
+        plt.ylabel("Cantidad de Valores Unicos (log)", fontsize=14)
+        plt.grid(True, which="both", ls="--", axis='y')
+        
+        stats_text = (
+            f"Total valores unicos: {format_count(total_unique_values)}\n"
+            f"Total ocurrencias: {format_count(total_ocurrence)}\n"
+            f"Frecuencia maxima: {format_count(max_freq)}"
+        )
+        plt.annotate(stats_text, 
+                    xy=(0.95, 0.95), 
+                    xycoords='axes fraction', 
+                    fontsize=15,
+                    ha='right', 
+                    va='top',
+                    bbox=dict(boxstyle='round', facecolor='white', alpha=0.9))
+        
+        max_val = group_freq.max()
+        min_y = 0.9  
+        
+        for i, (count, porcent) in enumerate(zip(group_freq.values, percentage_per_range.values)):
+            if count > 0:
+                y_pos = count * 1.1 if count * 1.1 > min_y else min_y * 1.2
+                
+                text = f"{porcent}%\n({format_count(count)})"
+                
+                ax.text(
+                    i, y_pos, text, 
+                    ha='center', va='bottom', 
+                    fontsize=15, 
+                    fontweight='bold',
+                    bbox=dict(
+                        facecolor='white', 
+                        alpha=0.85, 
+                        edgecolor='lightgray', 
+                        boxstyle='round,pad=0.3'
+                    )
+                )
+
+        output_path = os.path.join("img", f"histograma_{column}_{filename}.png")
+        plt.tight_layout()
+        plt.savefig(output_path, dpi=300, bbox_inches='tight')
+        plt.close()
+        
+        print("\n=== DISTRIBUCION DE FRECUENCIAS ===")
+        for i, (intervalo, count) in enumerate(group_freq.items()):
+            print(f"Rango {formatted_labels[i]}: {count:,}")
+        
+        print(f"\nHistograma generado exitosamente")
+        print(f"Archivo guardado en: {output_path}")
+        print(f"Total ocurrencias analizadas: {total_ocurrence:,}\n")
+
+    if __name__ == "__main__":
+        main()
+\end{lstlisting}
+\vfill
+
+% --------------------------
+% Histograma detallado de frecuencias de la columna 'identifier'
+% --------------------------
+\begin{lstlisting}[
+    language=Python,
+    caption={identifier\_histogram\_detailed.py, análisis de frecuencias de la columna 'identifier'.},
+    label={cod:identifier_histogram_detailed}
+    ]
+   import os
+    import pandas as pd
+    import matplotlib.pyplot as plt
+    import numpy as np
+    from collections import Counter
+    import sys
+    from tqdm import tqdm
+
+    def format_count(count):
+        if count >= 1_000_000:
+            return f"{count/1_000_000:.1f}M"
+        elif count >= 1_000:
+            return f"{count/1_000:.1f}K"
+        return str(count)
+
+    def create_histogram(data, bins, title, filename, color='skyblue', log_scale=False):
+        grouped = pd.cut(data, bins=bins, right=False).value_counts().sort_index()
+        total_values = len(data)
+        max_count = grouped.max()
+        
+        plt.figure(figsize=(14, 8))
+        ax = grouped.plot(kind='bar', color=color, edgecolor='black', alpha=0.7, logy=log_scale)
+        
+        bin_labels = []
+        for interval in grouped.index.categories:
+            left = int(interval.left)
+            right = int(interval.right)
+            bin_labels.append(f"{left}-{right-1}" if right-left > 1 else str(left))
+        
+        plt.xticks(range(len(bin_labels)), bin_labels, rotation=45, ha='right')
+        plt.title(f"{title}\nTotal valores unicos: {format_count(total_values)}", fontsize=14, pad=20)
+        plt.xlabel("Rango de repeticiones", fontsize=12)
+        plt.ylabel("Cantidad de valores unicos" + (" (log)" if log_scale else ""), fontsize=12)
+        plt.grid(True, which="both", ls="--", axis='y')
+        
+        min_y = 0.9
+        for i, (count, interval) in enumerate(zip(grouped.values, grouped.index)):
+            if count > 0:
+                percentage = (count / total_values) * 100
+                y_pos = count * 1.1 if count * 1.1 > min_y else min_y * 1.2
+                text = f"{percentage:.2f}%\n({format_count(count)})"
+                
+                ax.text(i, y_pos, text, 
+                    ha='center', va='bottom', 
+                    fontsize=15, fontweight='bold',
+                    bbox=dict(facecolor='white', alpha=0.8, edgecolor='lightgray', boxstyle='round,pad=0.2'))
+        
+        output_path = os.path.join("img", filename)
+        plt.tight_layout()
+        plt.savefig(output_path, dpi=300, bbox_inches='tight')
+        plt.close()
+        return output_path
+
+    def main():
+        if len(sys.argv) < 2:
+            print("Error: Debe especificar un archivo CSV")
+            sys.exit(1)
+
+        csv_file = sys.argv[1]
+        filename_base = os.path.splitext(os.path.basename(csv_file))[0]
+        column = "identifier"  
+        chunksize = 1_000_000  
+        os.makedirs("img", exist_ok=True)
+
+        print(f"\nIniciando analisis de: {csv_file}")
+        print(f"Columna analizada: {column}")
+        
+        print("\nContando frecuencias...")
+        counter = Counter()
+        
+        with tqdm(desc="  Contando filas totales", unit=' filas') as pbar:
+            total_rows = 0
+            for chunk in pd.read_csv(csv_file, usecols=[column], chunksize=chunksize):
+                total_rows += len(chunk)
+                pbar.update(len(chunk))
+        
+        with tqdm(total=total_rows, desc="  Procesando datos", unit=' filas') as pbar:
+            for chunk in pd.read_csv(csv_file, usecols=[column], chunksize=chunksize):
+                counter.update(chunk[column].dropna().astype(str))
+                pbar.update(len(chunk))
+
+        frequencies = pd.Series(counter)
+        total_unique = len(frequencies)
+        print(f"\nDatos procesados - Total valores unicos: {format_count(total_unique)}")
+
+        print("\nClasificando frecuencias...")
+        with tqdm(total=4, desc="  Progreso") as pbar:
+            low_freq = frequencies[(frequencies >= 1) & (frequencies <= 99)]
+            pbar.update(1)
+            mid_freq = frequencies[(frequencies >= 100) & (frequencies <= 1000)]
+            pbar.update(1)
+            high_freq = frequencies[(frequencies >= 1001) & (frequencies <= 10000)]
+            pbar.update(1)
+
+        low_bin = list(range(1, 100, 10)) + [100]
+        mid_bin = list(range(100, 1001, 100)) + [1001]
+        high_bin = list(range(1001, 10001, 1000)) + [10001]
+
+        print("\n===Resumen de frecuencias ===")
+        print(f"\nRango 1-99 repeticiones:")
+        print(f"   - Valores unicos: {format_count(len(low_freq))} ({len(low_freq)/total_unique:.1%})")
+        
+        print(f"\nRango 100-1000 repeticiones:")
+        print(f"   - Valores unicos: {format_count(len(mid_freq))} ({len(mid_freq)/total_unique:.1%})")
+        
+        print(f"\nRango 1001-10000 repeticiones:")
+        print(f"   - Valores unicos: {format_count(len(high_freq))} ({len(high_freq)/total_unique:.1%})")
+    
+
+        print("\nGenerando graficos...")
+        with tqdm(total=3, desc="  Progreso") as pbar:
+            low_path = create_histogram(
+                low_freq, 
+                bins=low_bin,
+                title="Distribucion de Frecuencias (1-99 repeticiones)",
+                filename=f"histograma_1-99_{column}_{filename_base}.png",
+                color='#4C72B0'
+            )
+            pbar.update(1)
+            
+            mid_path = create_histogram(
+                mid_freq,
+                bins=mid_bin,
+                title="Distribucion de Frecuencias (100-1000 repeticiones)",
+                filename=f"histograma_100-1k_{column}_{filename_base}.png",
+                color='#55A868',
+                log_scale=True
+            )
+            pbar.update(1)
+            
+            high_path = create_histogram(
+                high_freq,
+                bins=high_bin,
+                title="Distribucion de Frecuencias (1001-10,000 repeticiones)",
+                filename=f"histograma_1k-10k_{column}_{filename_base}.png",
+                color='#C44E52',
+                log_scale=True
+            )
+            pbar.update(1)
+        
+        print("\nGraficos generados exitosamente:")
+        print(f"{low_path}")
+        print(f"{mid_path}")
+        print(f"{high_path}")
+
+    if __name__ == "__main__":
+        main()
+\end{lstlisting}
+\vfill
+
+% --------------------------
+% Eliminación de duplicados
+% (basado en identifier, timestamp, device_lon, device_lat)
+% --------------------------
+\begin{lstlisting}[
+    language=Python,
+    caption={csv\_deduplicate.py, eliminación de duplicados en el conjunto de datos.},
+    label={cod:csv_deduplicate}
+    ]
+    import dask.dataframe as dd
+    import sys
+    import os
+
+    def delete_duplicates(input_file, output_file):
+    
+        ddf = dd.read_csv(input_file)
+        
+        print(f"\nProcesando archivo: {input_file}")
+        print(f"Numero inicial de registros: {len(ddf):,}")
+        
+        ddf_deduplicate = ddf.drop_duplicates(
+            subset=['identifier', 'timestamp', 'device_lon', 'device_lat'],
+            keep='first'
+        )
+        
+        print(f"Numero de registros despues de eliminar duplicados: {len(ddf_deduplicate):,}")
+        
+        ddf_deduplicate.to_csv(
+            output_file,
+            index=False,
+            single_file=True
+        )
+        
+        print(f"\nArchivo sin duplicados guardado en: {output_file}")
+
+    if __name__ == "__main__":
+        if len(sys.argv) < 2:
+            print("Error: Debe especificar un archivo CSV como argumento")
+            sys.exit(1)
+
+        input_csv = sys.argv[1]
+        base_name = os.path.splitext(input_csv)[0]
+        output_csv = f"{base_name}_DeDuplicate.csv" 
+        
+        delete_duplicates(input_csv, output_csv)
+\end{lstlisting}
+\vfill
+
+% --------------------------
+% Distribución de individuos por día
+% --------------------------
+\begin{lstlisting}[
+    language=Python,
+    caption={identifier\_histogram\_daily.py, análisis de frecuencias de la columna 'identifier' por día.},
+    label={cod:identifier_histogram_daily}
+    ]
+
+    import os
+    import pandas as pd
+    import matplotlib.pyplot as plt
+    import numpy as np
+    from collections import Counter
+    import sys
+    from tqdm import tqdm
+    import math
+    from datetime import datetime
+
+    def format_count(count):
+        if count >= 1_000_000:
+            return f"{count/1_000_000:.1f}M"
+        elif count >= 1_000:
+            return f"{count/1_000:.1f}K"
+        return str(count)
+
+    def main():
+        if len(sys.argv) < 2:
+            print("Error: Debe especificar un archivo CSV como argumento")
+            sys.exit(1)
+
+        csv_file = sys.argv[1]
+        filename = os.path.splitext(os.path.basename(csv_file))[0]
+        identifier_col = "identifier"
+        timestamp_col = "timestamp"
+        chunksize = 1_000_000
+        
+        print(f"\nIniciando procesamiento del archivo: {csv_file}")
+        print(f"Columnas analizadas: {identifier_col} y {timestamp_col}")
+        
+        os.makedirs("img/daily_histograms", exist_ok=True)
+        print("Directorios 'img/daily_histograms' verificados/creados")
+
+        print("\nProcesando datos y agrupando por dia...")
+        
+        date_freqs = {}
+        max_freq = 0
+        
+        total_chunks = sum(1 for _ in pd.read_csv(csv_file, usecols=[timestamp_col, identifier_col], chunksize=chunksize))
+        
+        with tqdm(total=total_chunks, unit=' chunk') as pbar:
+            for chunk in pd.read_csv(csv_file, usecols=[timestamp_col, identifier_col], chunksize=chunksize):
+                try:
+                    chunk['date'] = pd.to_datetime(
+                        chunk[timestamp_col], 
+                        format='mixed',  
+                        errors='coerce' 
+                    ).dt.date
+                    
+                    chunk = chunk.dropna(subset=['date'])
+                    
+                    for date, group in chunk.groupby('date'):
+                        if date not in date_freqs:
+                            date_freqs[date] = Counter()
+                        
+                        date_freqs[date].update(group[identifier_col].dropna().astype(str))
+                        
+                        current_max = date_freqs[date].most_common(1)[0][1] if date_freqs[date] else 0
+                        if current_max > max_freq:
+                            max_freq = current_max
+                except Exception as e:
+                    print(f"\nError procesando chunk: {str(e)}")
+                    continue
+                finally:
+                    pbar.update(1)
+
+        if not date_freqs:
+            print("\nError: No se encontraron datos validos para procesar")
+            sys.exit(1)
+
+        bins = [0] + [10**i for i in range(0, int(np.log10(max_freq)) + 2)] if max_freq > 0 else [0, 1]
+        
+        print("\nGenerando histogramas por dia...")
+        
+        for date, counter in tqdm(date_freqs.items(), total=len(date_freqs), unit=' dia'):
+            frecuency = pd.Series(counter)
+            total_unique_values = len(frecuency)
+            total_ocurrence = frecuency.sum()
+            
+            group_freq = pd.cut(frecuency, bins=bins, right=False).value_counts().sort_index()
+            percentage_per_range = (group_freq / total_unique_values * 100).round(2)
+            
+            plt.figure(figsize=(16, 9))
+            ax = group_freq.plot(kind='bar', logy=True, alpha=0.7, edgecolor='black')
+            
+            formatted_labels = []
+            for interval in group_freq.index.categories:
+                left = int(interval.left)
+                right = int(interval.right - 1)
+                formatted_labels.append(f"{left}-{right}" if left != right else f"{left}")
+            
+            plt.xticks(range(len(formatted_labels)), formatted_labels, rotation=45, ha='right')
+            
+            date_str = date.strftime('%Y-%m-%d')
+            plt.title(f"Histograma de Frecuencias de Identificadores\nArchivo: {filename} - Fecha: {date_str}", fontsize=16, pad=20)
+            plt.xlabel("Rango de Frecuencia", fontsize=14)
+            plt.ylabel("Cantidad de Valores Unicos (log)", fontsize=14)
+            plt.grid(True, which="both", ls="--", axis='y')
+            
+            stats_text = (
+                f"Total valores unicos: {(total_unique_values):,}\n"
+                f"Total ocurrencias: {(total_ocurrence):,}\n"
+                f"Frecuencia maxima: {(frecuency.max()):,}"
+            )
+            plt.annotate(stats_text, 
+                        xy=(0.95, 0.95), 
+                        xycoords='axes fraction', 
+                        fontsize=15,
+                        ha='right', 
+                        va='top',
+                        bbox=dict(boxstyle='round', facecolor='white', alpha=0.9))
+            
+            max_val = group_freq.max()
+            min_y = 0.9  
+            
+            for i, (count, porcent) in enumerate(zip(group_freq.values, percentage_per_range.values)):
+                if count > 0:
+                    y_pos = count * 1.1 if count * 1.1 > min_y else min_y * 1.2
+                    text = f"{porcent}%\n({format_count(count)})"
+                    ax.text(
+                        i, y_pos, text, 
+                        ha='center', va='bottom', 
+                        fontsize=15, 
+                        fontweight='bold',
+                        bbox=dict(
+                            facecolor='white', 
+                            alpha=0.85, 
+                            edgecolor='lightgray', 
+                            boxstyle='round,pad=0.3'
+                        )
+                    )
+
+            output_path = os.path.join("img", "daily_histograms", f"histograma_{identifier_col}_{filename}_{date_str}.png")
+            plt.tight_layout()
+            plt.savefig(output_path, dpi=300, bbox_inches='tight')
+            plt.close()
+        
+        print("\nHistogramas generados exitosamente")
+        print(f"Archivos guardados en: img/daily_histograms/")
+        print(f"Total dias procesados: {len(date_freqs)}")
+        print(f"Frecuencia maxima global encontrada: {format_count(max_freq)}\n")
+
+    if __name__ == "__main__":
+        main()
+    
+\end{lstlisting}
+\vfill
+
+% --------------------------
+% Migración de datos desde un CSV a una base de datos PostgreSQL
+% --------------------------
+\begin{lstlisting}[
+    language=Python,
+    caption={migrate\_csv\_to\_postgres.py, migración de datos desde un CSV a una base de datos PostgreSQL.},
+    label={cod:migrate_csv_to_postgres}
+    ]
+    import pandas as pd
+    import psycopg2
+    from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
+    import os
+    from sqlalchemy import create_engine, text
+    import logging
+
+    logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+    logger = logging.getLogger(__name__)
+
+    class MobilityDataLoader:
+        def __init__(self):
+            self.db_config = {
+                'host': os.getenv('DB_HOST', 'localhost'),
+                'port': os.getenv('DB_PORT', '5432'),
+                'user': os.getenv('DB_USER', 'postgres'),
+                'password': os.getenv('DB_PASSWORD', 'postgres123'),
+                'default_db': os.getenv('DB_NAME', 'postgres')  # DB por defecto para crear la nueva
+            }
+            self.target_db = 'trajectories'
+            self.csv_file = 'Mobility_Data_Slim_DeDuplicate.csv'
+            
+        def create_database(self):
+            try:
+                conn = psycopg2.connect(
+                    host=self.db_config['host'],
+                    port=self.db_config['port'],
+                    user=self.db_config['user'],
+                    password=self.db_config['password'],
+                    database=self.db_config['default_db']
+                )
+                conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
+                cur = conn.cursor()
+                cur.execute("SELECT 1 FROM pg_catalog.pg_database WHERE datname = %s", (self.target_db,))
+                exists = cur.fetchone()
+                
+                if not exists:
+                    cur.execute(f'CREATE DATABASE {self.target_db}')
+                    logger.info(f"Base de datos '{self.target_db}' creada exitosamente")
+                else:
+                    logger.info(f"Base de datos '{self.target_db}' ya existe")
+                    
+                cur.close()
+                conn.close()
+                
+            except Exception as e:
+                logger.error(f"Error al crear la base de datos: {e}")
+                raise
+        
+        def analyze_csv_structure(self):
+            try:
+                if not os.path.exists(self.csv_file):
+                    raise FileNotFoundError(f"Archivo {self.csv_file} no encontrado")
+                
+                df_sample = pd.read_csv(self.csv_file, nrows=5)
+                logger.info(f"Estructura del CSV:")
+                logger.info(f"Columnas: {list(df_sample.columns)}")
+                logger.info(f"Tipos de datos:")
+                for col, dtype in df_sample.dtypes.items():
+                    logger.info(f"  {col}: {dtype}")
+                
+                return df_sample
+                
+            except Exception as e:
+                logger.error(f"Error al analizar CSV: {e}")
+                raise
+        
+        def create_table_from_csv(self, df_sample):
+            try:
+                engine = create_engine(
+                    f"postgresql://{self.db_config['user']}:{self.db_config['password']}@"
+                    f"{self.db_config['host']}:{self.db_config['port']}/{self.target_db}"
+                )
+                type_mapping = {
+                    'object': 'TEXT',
+                    'int64': 'BIGINT',
+                    'int32': 'INTEGER',
+                    'float64': 'DOUBLE PRECISION',
+                    'float32': 'REAL',
+                    'bool': 'BOOLEAN',
+                    'datetime64[ns]': 'TIMESTAMP'
+                }
+                columns_ddl = []
+                for col, dtype in df_sample.dtypes.items():
+                    pg_type = type_mapping.get(str(dtype), 'TEXT')
+                    clean_col = col.lower().replace(' ', '_').replace('-', '_').replace('.', '_')
+                    columns_ddl.append(f"{clean_col} {pg_type}")
+                
+                create_table_sql = f"""
+                CREATE TABLE IF NOT EXISTS mobility_data (
+                    id SERIAL PRIMARY KEY,
+                    {','.join(columns_ddl)},
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+                """
+                
+                with engine.connect() as conn:
+                    conn.execute(text("DROP TABLE IF EXISTS mobility_data"))
+                    conn.execute(text(create_table_sql))
+                    conn.commit()
+                    
+                logger.info("Tabla 'mobility_data' creada exitosamente")
+                
+                return engine
+                
+            except Exception as e:
+                logger.error(f"Error al crear la tabla: {e}")
+                raise
+        
+        def load_csv_to_table(self, engine):
+            try:
+                logger.info(f"Leyendo archivo CSV: {self.csv_file}")
+                df = pd.read_csv(self.csv_file)
+                
+                # Limpiar nombres de columnas
+                df.columns = [col.lower().replace(' ', '_').replace('-', '_').replace('.', '_') 
+                            for col in df.columns]
+                
+                logger.info(f"Cargando {len(df)} registros a la tabla...")
+                
+                chunk_size = 1000
+                total_chunks = len(df) // chunk_size + (1 if len(df) % chunk_size else 0)
+                
+                for i, chunk in enumerate(pd.read_csv(self.csv_file, chunksize=chunk_size)):
+                    # Limpiar nombres de columnas del chunk
+                    chunk.columns = [col.lower().replace(' ', '_').replace('-', '_').replace('.', '_') 
+                                for col in chunk.columns]
+                    
+                    chunk.to_sql('mobility_data', engine, if_exists='append', index=False, method='multi')
+                    logger.info(f"Procesado chunk {i+1}/{total_chunks}")
+                
+                logger.info("Datos cargados exitosamente")
+                
+                with engine.connect() as conn:
+                    result = conn.execute(text("SELECT COUNT(*) FROM mobility_data"))
+                    count = result.fetchone()[0]
+                    logger.info(f"Total de registros en la tabla: {count}")
+                    
+            except Exception as e:
+                logger.error(f"Error al cargar datos: {e}")
+                raise
+        
+        def run(self):
+            try:
+                logger.info("=== Iniciando proceso de carga de datos de movilidad ===")
+                
+                self.create_database()
+                df_sample = self.analyze_csv_structure()
+                engine = self.create_table_from_csv(df_sample)
+                self.load_csv_to_table(engine)
+                
+                logger.info("=== Proceso completado exitosamente ===")
+                
+            except Exception as e:
+                logger.error(f"Error en el proceso: {e}")
+                raise
+
+    if __name__ == "__main__":
+        loader = MobilityDataLoader()
+        loader.run()
+\end{lstlisting}
+\vfill
+
+% --------------------------
+% Query para obtener el porcentaje de individuos con precisión de GPS mejor a 20 metros
+% --------------------------
+\begin{lstlisting}[
+  language=SQL,
+  caption={Porcentaje de individuos con precisión de GPS mejor a 20 metros},
+  label={cod:query_precision_gps}
+  ]
+WITH estadisticas AS (
+    SELECT 
+        COUNT(id) AS total_individuos,
+        SUM(CASE WHEN device_horizontal_accuracy < 20 THEN 1 ELSE 0 END) AS total_precision_gps
+    FROM mobility_data
+)
+SELECT 
+    total_individuos,
+    total_precision_gps,
+    ROUND((total_precision_gps * 100.0 / total_individuos), 2) AS porcentaje_precision_gps
+FROM estadisticas;
+\end{lstlisting}
+
+% --------------------------
+% Query para contar individuos con más de 3 registros
+% --------------------------
+\begin{lstlisting}[
+  language=SQL,
+  caption={Query para contar individuos con más de 3 registros},
+  label={cod:query_individuos_mas_de_3_registros}
+  ]
+WITH estadisticas AS (
+    SELECT 
+        (SELECT COUNT(DISTINCT identifier) FROM mobility_data) AS total_individuos,
+        (SELECT COUNT(*) 
+         FROM (SELECT identifier 
+               FROM mobility_data 
+               GROUP BY identifier 
+               HAVING COUNT(*) > 3) AS individuos_filtrados
+        ) AS individuos_con_mas_de_3
+)
+SELECT 
+    total_individuos,
+    individuos_con_mas_de_3,
+    ROUND((individuos_con_mas_de_3 * 100.0 / total_individuos), 2) AS porcentaje_individuos_con_mas_de_3
+FROM estadisticas;
+\end{lstlisting}
+
+% --------------------------
+% Query para contar individuos con más de 3 registros y precisión de GPS mejor a 20 metros
+% --------------------------
+\begin{lstlisting}[
+  language=SQL,
+  caption={Query para contar individuos con más de 3 registros y precisión de GPS},
+  label={cod:query_individuos_mas_de_3_y_precision}
+  ]
+WITH estadisticas AS (
+    SELECT 
+        (SELECT COUNT(DISTINCT identifier) FROM mobility_data) AS total_individuos,
+        (SELECT COUNT(*) 
+         FROM (SELECT identifier 
+               FROM mobility_data 
+               WHERE device_horizontal_accuracy < 20
+               GROUP BY identifier 
+               HAVING COUNT(*) > 3) AS individuos_filtrados
+        ) AS individuos_con_mas_de_3_y_precision
+)
+
+
+SELECT 
+    total_individuos,
+    individuos_con_mas_de_3_y_precision,
+    ROUND((individuos_con_mas_de_3_y_precision * 100.0 / total_individuos), 2) AS porcentaje_individuos_condicion
+FROM estadisticas;
+\end{lstlisting}
+
+% --------------------------
+% Query para calcular la calidad de las trayectorias de movilidad
+% --------------------------
+\begin{lstlisting}[
+    language=SQL,
+    caption={Query para calcular la calidad de las trayectorias de movilidad},
+    label={cod:query_calidad_trayectorias}
+    ]
+WITH movement_data AS (
+    SELECT 
+        identifier,
+        timestamp::timestamp as ts,
+        device_lat,
+        device_lon,
+        device_horizontal_accuracy,
+        LAG(device_lat) OVER (PARTITION BY identifier ORDER BY timestamp) as prev_lat,
+        LAG(device_lon) OVER (PARTITION BY identifier ORDER BY timestamp) as prev_lon,
+        CASE 
+            WHEN ABS(COALESCE(LAG(device_lat) OVER (PARTITION BY identifier ORDER BY timestamp), device_lat) - device_lat) > 0.001 
+                 OR ABS(COALESCE(LAG(device_lon) OVER (PARTITION BY identifier ORDER BY timestamp), device_lon) - device_lon) > 0.001 
+            THEN 1 ELSE 0 
+        END as is_movement
+    FROM mobility_data
+    WHERE device_lat IS NOT NULL 
+      AND device_lon IS NOT NULL
+      AND device_horizontal_accuracy < 100
+),
+
+best_trajectories AS (
+    SELECT 
+        identifier,
+        COUNT(*) as records_count,
+        EXTRACT(DAYS FROM (MAX(ts) - MIN(ts))) as time_span_days,
+        COUNT(DISTINCT DATE(ts)) as active_days_count,
+        AVG(device_horizontal_accuracy) as avg_accuracy_meters,
+        SUM(is_movement) as movement_points,
+        (MAX(device_lat) - MIN(device_lat)) + (MAX(device_lon) - MIN(device_lon)) as spatial_range
+    FROM movement_data
+    GROUP BY identifier
+    HAVING COUNT(*) >= 50  
+       AND EXTRACT(DAYS FROM (MAX(ts) - MIN(ts))) >= 1  
+       AND COUNT(DISTINCT DATE(ts)) >= 2 
+
+trajectory_scores AS (
+    SELECT 
+        *,
+        -- Score compuesto final
+        (LEAST(100, records_count / 5.0) * 0.25 +  
+         LEAST(100, time_span_days / 0.3) * 0.2 + 
+         LEAST(100, active_days_count::float / NULLIF(time_span_days, 0) * 100) * 0.2 +  
+         GREATEST(0, 100 - avg_accuracy_meters) * 0.15 +  
+         LEAST(100, movement_points / 1.0) * 0.1 +  
+         LEAST(100, spatial_range / 0.01 * 100) * 0.1  
+        ) as trajectory_quality_score
+    FROM best_trajectories
+)
+SELECT 
+    identifier,
+    records_count,
+    time_span_days,
+    active_days_count,
+    ROUND(active_days_count::numeric / NULLIF(time_span_days, 0), 2) as activity_ratio,
+    ROUND(avg_accuracy_meters::numeric, 2) as avg_accuracy_meters,
+    movement_points,
+    ROUND(spatial_range::numeric, 6) as spatial_diversity,
+    ROUND(trajectory_quality_score::numeric, 2) as quality_score,
+    
+    CASE 
+        WHEN trajectory_quality_score >= 80 THEN 'EXCELENTE'
+        WHEN trajectory_quality_score >= 65 THEN 'MUY BUENA'
+        WHEN trajectory_quality_score >= 50 THEN 'BUENA'
+        WHEN trajectory_quality_score >= 35 THEN 'REGULAR'
+        ELSE 'BAJA'
+    END as quality_category,
+    
+    ROW_NUMBER() OVER (ORDER BY trajectory_quality_score DESC) as overall_rank
+
+FROM trajectory_scores
+WHERE trajectory_quality_score >= 35  
+ORDER BY trajectory_quality_score DESC
+LIMIT 100;  
+\end{lstlisting}
+\vfill
+

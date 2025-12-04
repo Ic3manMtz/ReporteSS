@@ -1,0 +1,369 @@
+\label{anexo:docker}
+
+En la sección \ref{sec:requisitos-sistema} se establece como requisito el uso de Docker y Docker Compose para la ejecución del proyecto. A continuación, se detallan las instrucciones necesarias para su instalación, ya que ambas herramientas son fundamentales para la implementación. Además, se describe el archivo \texttt{docker-compose.yml}, el cual permite crear un contenedor que incluye todas las dependencias requeridas para el correcto funcionamiento del sistema.
+
+% --------------------------
+% Introducción
+% --------------------------
+\section{¿Qué son Docker y Docker Compose?}
+Docker es una plataforma de virtualización ligera que permite desarrollar, empaquetar y ejecutar aplicaciones en contenedores aislados. Un contenedor incluye el código, las dependencias y configuraciones necesarias para que la aplicación se ejecute de manera consistente en cualquier entorno. Esto facilita la portabilidad, escalabilidad y despliegue de software.
+
+Docker Compose es una herramienta que permite definir y ejecutar aplicaciones multicontenedor mediante archivos de configuración YAML. A través de un solo archivo \texttt{docker-compose.yml}, es posible especificar los servicios, redes y volúmenes que componen una aplicación, simplificando así su orquestación.
+
+Estas herramientas son fundamentales en este proyecto para garantizar que el entorno de ejecución sea replicable y controlado, independientemente del sistema operativo o configuración local del usuario.
+
+% --------------------------
+% Instalación de Docker y Docker Compose Linux
+% --------------------------
+\section{Instalación en Linux (Ubuntu/Debian)}
+
+Para instalar Docker y Docker Compose en un sistema Linux basado en Debian o Ubuntu, siga los siguientes pasos:
+
+\begin{enumerate}
+    \item Actualizar los paquetes del sistema:
+    \begin{lstlisting}[
+			language=bash,
+			caption={Actualizar el sistema.},
+			label={cod:update_system}
+		]
+sudo apt update
+sudo apt upgrade
+		\end{lstlisting}
+    
+    \item Instalar Docker:
+    \begin{lstlisting}[
+			language=bash,
+			caption={Instalar Docker.},
+			label={cod:install_docker}
+		]
+sudo apt install docker.io
+sudo systemctl enable docker
+sudo systemctl start docker
+    \end{lstlisting}
+    
+    \item Verificar que Docker está instalado correctamente:
+    \begin{lstlisting}[
+			language=bash,
+			caption={Verificar instalación de Docker.},
+			label={cod:check_docker}
+		]
+docker --version
+    \end{lstlisting}
+    
+    \item Instalar Docker Compose:
+    \begin{lstlisting}[
+			language=bash,
+			caption={Instalar Docker Compose.},
+			label={cod:install_docker_compose}
+		]
+sudo apt install docker-compose
+    \end{lstlisting}
+    
+    \item Verificar la instalación:
+    \begin{lstlisting}[
+			language=bash,
+			caption={Verificar instalación de Docker Compose.},
+			label={cod:check_docker_compose}
+		]
+docker-compose --version
+    \end{lstlisting}
+\end{enumerate}
+
+% --------------------------
+% Instalación de Docker y Docker Compose Windows
+% --------------------------
+\section{Instalación en Windows}
+
+Para instalar Docker y Docker Compose en Windows, se recomienda utilizar Docker Desktop, que incluye ambas herramientas de forma integrada.
+
+\begin{enumerate}
+    \item Acceder al sitio oficial: \href{https://www.docker.com/products/docker-desktop/}{https://www.docker.com/products/docker-desktop/}
+    
+    \item Descargar el instalador correspondiente para Windows.
+
+    \item Ejecutar el instalador y seguir el asistente de instalación.
+
+    \item Reiniciar el sistema si es necesario.
+
+    \item Verificar que Docker y Docker Compose estén correctamente instalados desde la terminal de Windows (PowerShell o CMD):
+    \begin{lstlisting}[
+			language=bash,
+			caption={Verificar instalación de Docker y Docker Compose.},
+			label={cod:check_docker_windows}
+		]
+docker --version
+docker-compose --version
+    \end{lstlisting}
+\end{enumerate}
+
+\textbf{Nota:} Docker Desktop requiere que la virtualización esté habilitada en la BIOS del sistema. También es necesario contar con Windows 10 o superior.
+
+% --------------------------
+% Archivo docker-compose.yml
+% --------------------------
+\section{Descripción del archivo \texttt{docker-compose.yml}}
+El archivo \texttt{docker-compose.yml} permite definir y configurar el entorno de ejecución del proyecto utilizando contenedores de Docker. A continuación, se presenta su contenido y una explicación de cada uno de sus elementos:
+\vspace{3mm}
+
+% docker-compose.yml
+\begin{lstlisting}[
+  language=bash,
+  caption={Archivo docker-compose.yml},
+  label={cod:docker_compose_file}
+  ]
+ version: "3.8" 
+
+services:
+  data-analysis:
+    image: python:3.13-bookworm
+    container_name: data-analysis
+    tty: true
+    stdin_open: true
+    volumes:
+      - ./:/app
+    working_dir: /app
+    environment:
+      - PYTHONPATH=/app
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=data_analysis
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres123
+    command: >
+      sh -c "
+        pip install --no-cache-dir -r requirements.txt &&
+        echo 'Esperando a que PostgreSQL este listo...' &&
+        until pg_isready -h postgres -p 5432 -U postgres; do
+          echo 'PostgreSQL no esta listo - esperando...'
+          sleep 2
+        done &&
+        echo 'PostgreSQL esta listo!' &&
+        tail -f /dev/null
+      "
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - data-network
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: postgres-db
+    restart: always
+    environment:
+      POSTGRES_DB: data_analysis
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - data-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  adminer:
+    image: adminer:latest
+    container_name: adminer
+    restart: always
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    networks:
+      - data-network
+
+volumes:
+  postgres_data:
+
+networks:
+  data-network:
+    driver: bridge
+
+\end{lstlisting}
+
+A continuación se explica el propósito de cada sección:
+\begin{itemize}
+  \item \texttt{version: "3.8"}\
+  Define la versión del esquema de Docker Compose utilizado. La versión 3.8 es compatible con la mayoría de las características modernas de Docker.
+  \item \texttt{services}\
+  Define tres servicios que componen la aplicación: \texttt{data-analysis}, \texttt{postgres} y \texttt{adminer}.
+  \item \texttt{data-analysis}\
+  Servicio principal que contiene la aplicación de análisis de datos:
+  \begin{itemize}
+  \item \texttt{image: python:3.13-bookworm}: Utiliza una imagen oficial de Python 3.13 basada en Debian Bookworm.
+  \item \texttt{container\_name: data-analysis}: Asigna un nombre personalizado al contenedor.
+  \item \texttt{tty: true} y \texttt{stdin\_open: true}: Habilitan la interacción con el terminal del contenedor.
+  \item \texttt{volumes}: Monta el directorio actual del proyecto como \texttt{/app} dentro del contenedor.
+  \item \texttt{working\_dir: /app}: Establece el directorio de trabajo dentro del contenedor.
+  \item \texttt{environment}: Define variables de entorno incluyendo \texttt{PYTHONPATH} y las credenciales de conexión a la base de datos PostgreSQL.
+  \item \texttt{command}: Instala las dependencias, espera a que PostgreSQL esté disponible usando \texttt{pg\_isready}, y mantiene el contenedor activo.
+  \item \texttt{depends\_on}: Especifica que este servicio depende de que PostgreSQL esté saludable antes de iniciarse.
+  \item \texttt{networks}: Conecta el contenedor a la red \texttt{data-network}.
+  \end{itemize}
+  \item \texttt{postgres}\
+  Servicio de base de datos PostgreSQL:
+  \begin{itemize}
+  \item \texttt{image: postgres:15-alpine}: Utiliza la imagen oficial de PostgreSQL 15 basada en Alpine Linux.
+  \item \texttt{container\_name: postgres-db}: Nombre del contenedor de la base de datos.
+  \item \texttt{restart: always}: Configura el contenedor para reiniciarse automáticamente en caso de fallo.
+  \item \texttt{environment}: Define las variables de entorno para la configuración inicial de PostgreSQL.
+  \item \texttt{ports}: Expone el puerto 5432 para permitir conexiones externas a la base de datos.
+  \item \texttt{volumes}: Crea un volumen persistente para almacenar los datos de PostgreSQL.
+  \item \texttt{healthcheck}: Configura verificaciones de salud para determinar cuándo PostgreSQL está listo.
+  \end{itemize}
+  \item \texttt{adminer}\
+  Interfaz web para administración de la base de datos:
+  \begin{itemize}
+  \item \texttt{image: adminer:latest}: Utiliza la imagen oficial más reciente de Adminer.
+  \item \texttt{ports}: Expone el puerto 8080 para acceder a la interfaz web.
+  \item \texttt{depends\_on}: Especifica dependencia del servicio PostgreSQL.
+  \end{itemize}
+  \item \texttt{volumes : postgres\_data}\
+  Declara un volumen persistente para almacenar los datos de PostgreSQL, garantizando que los datos persistan entre reinicios de contenedores.
+  \item \texttt{networks : data-network}\
+  Define una red bridge personalizada que permite la comunicación entre los contenedores del proyecto.
+\end{itemize}
+Esta configuración crea un entorno completo de desarrollo que incluye la aplicación de análisis de datos, una base de datos PostgreSQL y una herramienta de administración web, todos interconectados y fácilmente replicables en cualquier sistema que tenga Docker instalado.
+\newpage
+
+% --------------------------
+% Scripts de control del contenedor
+% --------------------------
+\section{Scripts de control del contenedor}
+
+Para facilitar el manejo del contenedor durante el desarrollo del proyecto, se han creado tres scripts auxiliares en Bash que automatizan las operaciones más comunes: iniciar, reiniciar y detener el contenedor.
+
+\subsection{\texttt{start\_container.sh}}
+
+Este script verifica si el contenedor \texttt{data-analysis} ya se encuentra en ejecución. En caso de que no esté activo, lo inicia utilizando \texttt{docker-compose up -d}. Posteriormente, ejecuta el archivo \texttt{main.py} dentro del contenedor.
+
+\begin{lstlisting}[
+  language=bash,
+  caption={Script para iniciar el contenedor.},
+  label={cod:start_script}
+]
+#!/bin/bash
+
+if ! docker ps --filter "name=^/data-analysis$" --filter "status=running" | grep -q data-analysis; then
+    echo "Contenedor no esta corriendo. Levantando con docker-compose..."
+    docker-compose up -d
+    echo "Esperando que se instalen las dependencias..."
+    while ! docker exec data-analysis pip show colorama &> /dev/null; do
+        sleep 2
+    done
+    echo "Dependencias instaladas correctamente."
+else
+    echo "Contenedor ya esta corriendo. Usando instancia existente."
+fi
+
+echo "Ejecutando script..."
+docker exec -it data-analysis python3 /app/src/main.py
+\end{lstlisting}
+
+\subsection{\texttt{restart\_container.sh}}
+
+Este script reinicia completamente el contenedor (equivalente a detenerlo y volverlo a levantar), lo cual resulta útil cuando se han modificado archivos como \texttt{requirements.txt} o \texttt{setup.py}. Tras reiniciar, vuelve a ejecutar el archivo principal del proyecto.
+
+\begin{lstlisting}[
+  language=bash,
+  caption={Script para reiniciar el contenedor.},
+  label={cod:restart_script}
+]
+#!/bin/bash
+docker restart data-analysis
+sleep 2
+docker exec -it data-analysis python3 /app/src/main.py
+\end{lstlisting}
+
+\subsection{\texttt{stop\_container.sh}}
+
+Este script detiene y elimina el contenedor junto con los volúmenes asociados. Debe utilizarse con precaución, ya que elimina todas las dependencias instaladas en el entorno del contenedor. Solo es necesario en casos donde se requiere limpiar completamente el entorno.
+
+\begin{lstlisting}[
+  language=bash,
+  caption={Script para detener y eliminar el contenedor y sus volúmenes.},
+  label={cod:stop_script}
+]
+#!/bin/bash
+docker-compose down --volumes
+\end{lstlisting}
+
+% --------------------------
+% Proceso de uso y desarrollo del contenedor
+% --------------------------
+\section{Proceso de uso y desarrollo del contenedor}
+
+A continuación se describe el flujo recomendado para desarrollar y ejecutar el sistema dentro del contenedor de Docker:
+
+\begin{enumerate}
+    \item Verifique que Docker y Docker Compose están instalados (Apéndice \ref{cod:check_docker_windows}).\\
+    {\footnotesize \textbf{Nota para usuarios de Windows:} Si se utiliza Windows como sistema operativo, se deben usar los archivos con extensión \texttt{.bat} en lugar de \texttt{.sh}, y deben ser ejecutados desde la terminal de Windows (por ejemplo, CMD o PowerShell).}
+
+    \item Asigne permisos de ejecución a los scripts:
+    \begin{lstlisting}[
+      language=bash,
+      caption={Dar permisos de ejecución a los scripts.},
+      label={cod:chmod_scripts}
+    ]
+chmod +x start_container.sh restart_container.sh stop_container.sh
+    \end{lstlisting}
+    \item Para iniciar el contenedor y ejecutar el proyecto con los cambios más recientes del código fuente:
+    \begin{lstlisting}[
+      language=bash,
+      caption={Iniciar contenedor y ejecutar el proyecto.},
+      label={cod:run_dev}
+    ]
+./start_container.sh
+    \end{lstlisting}
+    \item Si se realizan cambios en las dependencias o archivos de configuración del entorno (como \texttt{requirements.txt}), utilice:
+    \begin{lstlisting}[
+      language=bash,
+      caption={Reiniciar el contenedor completamente.},
+      label={cod:restart_dev}
+    ]
+./restart_container.sh
+    \end{lstlisting}
+    \item Para detener el contenedor y eliminar todos los volúmenes asociados:
+    \begin{lstlisting}[
+      language=bash,
+      caption={Eliminar el contenedor y limpiar el entorno.},
+      label={cod:stop_dev}
+    ]
+./stop_container.sh
+    \end{lstlisting}
+\end{enumerate}
+
+Este conjunto de scripts permite un desarrollo ágil dentro del contenedor, ya que los cambios realizados en el código fuente local se reflejan de inmediato gracias al uso de \texttt{volumes}. Además, se reduce la necesidad de ejecutar manualmente comandos repetitivos, facilitando el trabajo del usuario final y asegurando la correcta ejecución del proyecto.
+
+Para poder ejecutar un script dentro del contenedor, y dejarlo corriendo en segundo plano sin necesidad de una conexión SSH activa. Hay que instalar tmux dentro del contenedor, como se muestra a continuación:
+
+\begin{lstlisting}
+  sudo docker exec -u root -it data-analysis bash
+  apt update && apt install tmux -y
+\end{lstlisting}
+
+Una vez instalado tmux dentro del contenedor se pueden usar los siguiente comandos:
+\begin{enumerate}
+  \item \textbf{Crear una sesión tmux}
+  \begin{lstlisting}
+    sudo docker exec -it data-analysis tmux new-session -d -s {SessionName} 'cd /app && python3 {PythonScript}.py'
+  \end{lstlisting}
+
+  \item \textbf{Listas las sesiones tmux activas}
+  \begin{lstlisting}
+    sudo docker exec -it data-analysis tmux list-sessions
+  \end{lstlisting}
+
+  \item \textbf{Conectarse a la sesión tmux creada} Para poder salir de la sesión sin detener el proceso, presione \texttt{Ctrl + b} y luego \texttt{d} (de detach).
+  \begin{lstlisting}
+    sudo docker exec -it data-analysis tmux attach -t {SessionName}
+  \end{lstlisting}
+\end{enumerate}
+
+
