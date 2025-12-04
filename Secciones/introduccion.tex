@@ -1,26 +1,25 @@
 \section{Importancia de los modelos de movilidad para la evaluación de protocolos para redes móviles}
-La simulación de una red de comunicaciones en donde intervienen dispositivos personales de comunicación requiere de modelos que representen fielmente los patrones de movimiento de las personas. De lo contrario, las conclusiones derivadas de dicha simulación pueden ser poco útiles. Para avanzar hacia la definición de un modelo de trayectorias individuales, se propone caracterizar los datos de una base de datos existente que permita modelar trayectorias de una forma eficaz.
+La simulaci\'on de una red de comunicaciones en donde intervienen dispositivos personales de comunucaci\'on requiere contar con modelos que representen fielmente los patrones de movimiento de las personas. De otra manera, la utilidad de las conclusiones que se puedan obtener de esa simulaci\'on es limitada. 
+
+\noindent Para avanzar hacia la definici\'on de un modelo de movilidad humana grupal, se propone la construcci\'on de una base de datos de videos a\'ereos (capturados por un dron) y su an\'alisis v\'ia herramientas de IA. Esto nos permitir\'a determinar algunas caracter\'isticas de la movilidad de inter\'es.
 
 \section{Proceso de diseño de un modelo de movilidad}
 El diseño de un modelo de movilidad implica varias etapas:
 \begin{itemize}
-	\item \textbf{Caracterización de datos}: Limpieza, depuración y análisis exploratorio.
-	\item \textbf{Identificación de trayectorias}: Extracción de secuencias de movimiento significativas.
-	\item \textbf{Validación y evaluación}: Medición de la calidad y representativividad de las trayectorias.
+	\item \textbf{Recolección de datos reales}: Captura y organización de videos.
+	\item \textbf{Procesamiento de videos}: Manipulación de los videos para la extracción de trayectorias individuales.
+	\item \textbf{Identificación de grupos de individuos}: Análisis de las trayectorias individuales para la identificación de grupos de individuos.
+	\item \textbf{Caracterización de los grupos de individuos identificados}: Análisis de los datos obtenidos de los grupos de individuos.
 \end{itemize}
 
 \section{Objetivo del proyecto}
-El objetivo principal del proyecto es obtener una caracterización estadística de las trayectorias individuales a partir de un conjunto de datos de movilidad. Esto incluye la identificación de trayectorias peatonales y su análisis mediante herramientas de IA.
+El objetivo principal del proyecto es contar con una caracterización de los grupos humanos que se desplazan juntos. Identificando las características estadísticas de los mismos.
 
 \section{Logros}
 \begin{itemize}
-	\item  Reducir el conjunto de datos de 69.98 millones de registros, 19 columnas y un peso de 22 GB a 51 millones de registros, 7 columnas y 7 GB.
+	\item  Detectar y rastrear individuos dentro de un video.
 	
-	\item Identificar que el 68.73\% de los registros tienen precisión GPS satelital (1-20 metros).
+	\item Encontrar los patrones de movimiento y las interacciones entre individuos para la obtención de grupos.
 	
-	\item  Desarrollar un algoritmo de evaluación de calidad de trayectorias con métrica como volumen, cobertura temporal, precisión GPS y diversidad espacial.
-	
-	\item Encontrar un respaldo del algoritmo de evaluación usando el algoritmo de clusterización K Medias con los puntos de recorrido.
-	
-	\item Graficar la distribución de las longitudes de vuelo para poder aproximar una distribución probabilística.
+	\item  Extracción de características relevantes sobre la movilidad y las interacciones grupales
 \end{itemize}
