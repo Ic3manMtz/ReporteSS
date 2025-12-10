@@ -11,6 +11,9 @@
 \contentsline {section}{\numberline {3.1}Objetivos}{6}{section.3.1}%
 \contentsline {section}{\numberline {3.2}Metodología}{6}{section.3.2}%
 \contentsline {chapter}{\numberline {4}Desarrollo}{7}{chapter.4}%
-\contentsline {section}{\numberline {4.1}Paso 1 de la metodología y resultados}{8}{section.4.1}%
+\contentsline {section}{\numberline {4.1}Captura y almacenamiento}{8}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Preprocesamiento}{8}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Detección y seguimiento de individuos}{8}{section.4.3}%
+\contentsline {section}{\numberline {4.4}Extracción de características}{8}{section.4.4}%
 \contentsline {chapter}{\numberline {5}Resultados}{9}{chapter.5}%
 \contentsline {chapter}{\numberline {6}Conclusiones y Trabajo futuro}{10}{chapter.6}%
