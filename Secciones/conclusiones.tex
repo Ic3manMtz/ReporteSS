@@ -1,0 +1,48 @@
+\section{Conclusiones del Proyecto}
+El proyecto ha logrado implementar y validar exitosamente un \textit{pipeline} integral para la construcción de una base de datos de videos aéreos y el análisis automatizado de la movilidad y el comportamiento grupal. Los objetivos planteados han sido cubiertos, destacando las siguientes conclusiones clave:
+
+\subsection{Eficiencia y Escalabilidad del Sistema}
+La refactorización del \textit{pipeline} hacia un procesamiento directo y concurrente de videos (en lugar de la previa conversión a \textit{frames}) fue la decisión más crítica para la eficiencia.
+
+\begin{itemize}
+	\item El sistema demostró ser altamente escalable, procesando 236,785 \textit{frames} de video (equivalente a más de 2.19 horas) en un tiempo óptimo gracias al uso de \textit{threading} concurrente y la capacidad de la GPU.
+	\item La arquitectura modular permite la fácil integración o reemplazo de componentes clave (ej., cambiar el modelo YOLO o el algoritmo de \textit{tracking}) sin necesidad de reescribir la lógica de orquestación.
+\end{itemize}
+
+\subsection{Robustez del Análisis Detección-Rastreo}
+La implementación del enfoque híbrido YOLOv11x + DeepSORT garantizó la generación de trayectorias individuales con alta fidelidad, un requisito fundamental para el análisis de grupos.
+
+\begin{itemize}
+	\item Se logró rastrear un total de 4,097 identidades únicas, incluso en escenarios de alta densidad poblacional.
+	\item El rastreo fue lo suficientemente persistente para mantener la identidad individual a través de leves oclusiones o cruces, proporcionando la base de datos necesaria para la simulación de modelos de movilidad.
+\end{itemize}
+
+\subsection{Valoración del Modelo de Agrupamiento}
+El algoritmo de agrupamiento, basado en la proximidad y persistencia temporal ($\tau=15$ \textit{frames}), demostró ser eficaz para caracterizar el comportamiento social.
+
+\begin{itemize}
+	\item Se detectaron 952 grupos únicos, estableciendo una métrica de interacción: por cada 4.3 individuos únicos, se formó un grupo estable en el área de estudio.
+	\item El análisis de la persistencia de los grupos reveló patrones importantes: mientras que los grupos de baja densidad tienden a ser fugaces (duraciones máximas de $\approx$15 segundos), los grupos en escenarios de alta densidad son extremadamente persistentes (duraciones de hasta $\approx$3.4 minutos), lo que apunta a la existencia de grupos estáticos o estructuras de tráfico lento en las áreas observadas.
+	\item La capacidad de extraer métricas (como la dispersión y la duración) convierte la base de datos de video aéreo en una herramienta cuantitativa para calibrar modelos de movilidad y comunicación.
+\end{itemize}
+
+\section{Trabajo Futuro}
+El proyecto sienta bases sólidas y abre varias líneas de investigación y desarrollo para extender su utilidad:
+
+\subsection{Extensión del Análisis Comportamental}
+\begin{itemize}
+	\item \textbf{Identificación de roles y patrones:} Implementar análisis para diferenciar si un individuo está quieto, caminando solo o esperando. Esto añadiría una capa semántica al estado de la persona, crucial para modelos de comunicación que penalizan la movilidad.
+	\item \textbf{Análisis de trayectorias:} Desarrollar módulos para calcular la trayectoria promedio de los grupos y el vector de velocidad promedio, enriqueciendo la caracterización del movimiento colectivo más allá de solo la existencia del grupo.
+\end{itemize}
+
+\subsection{Optimización y Despliegue}
+\begin{itemize}
+	\item \textbf{Integración de base de datos espaciotemporal:} Migrar la base de datos a un esquema que aproveche extensiones espaciales (como PostGIS) para permitir consultas complejas basadas en geometría y tiempo (ej., ``¿Cuántos grupos pasaron por el área X entre las 10:00 y las 10:15?'').
+	\item \textbf{Aceleración en GPU:} Investigar librerías de aceleración de video basadas en GPU (como NVIDIA's V-SDK o cuStream) para el decodificador de video, trasladando completamente el cuello de botella de E/S y \textit{decoding} a la GPU.
+\end{itemize}
+
+\subsection{Validación y Calibración del Modelo}
+\begin{itemize}
+	\item \textbf{Correlación con datos reales:} Utilizar los datos de agrupamiento obtenidos para calibrar y validar el modelo de movilidad de la red de comunicaciones. Por ejemplo, ajustar los parámetros de encuentro y desconexión en la simulación basados en las duraciones de grupo observadas (los 952 grupos detectados).
+	\item \textbf{Estudio de robustez:} Evaluar cómo los cambios en los hiperparámetros del algoritmo de agrupamiento ($\tau$ y la distancia de proximidad) modifican la cantidad y duración de los grupos, permitiendo establecer los umbrales óptimos para diferentes escenarios de afluencia.
+\end{itemize}

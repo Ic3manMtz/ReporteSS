@@ -1,14 +1,14 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  5 DEC 2025 16:36
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (MiKTeX 24.4) (preloaded format=pdflatex 2025.1.16)  11 DEC 2025 08:54
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**portada.tex
-(./portada.tex
-LaTeX2e <2024-11-01> patch level 2
-L3 programming layer <2025-01-18>
-(/usr/local/texlive/2025/texmf-dist/tex/latex/base/report.cls
+**./portada.tex
+(portada.tex
+LaTeX2e <2024-11-01> patch level 1
+L3 programming layer <2024-12-25>
+(S:\MiKTeX\tex/latex/base\report.cls
 Document Class: report 2024/06/29 v1.4n Standard LaTeX document class
-(/usr/local/texlive/2025/texmf-dist/tex/latex/base/size11.clo
+(S:\MiKTeX\tex/latex/base\size11.clo
 File: size11.clo 2024/06/29 v1.4n Standard LaTeX file (size option)
 )
 \c@part=\count196
@@ -23,24 +23,30 @@ File: size11.clo 2024/06/29 v1.4n Standard LaTeX file (size option)
 \abovecaptionskip=\skip49
 \belowcaptionskip=\skip50
 \bibindent=\dimen141
-)
-(/usr/local/texlive/2025/texmf-dist/tex/latex/base/inputenc.sty
+) (S:\MiKTeX\tex/latex/base\inputenc.sty
 Package: inputenc 2024/02/08 v1.3d Input encoding file
 \inpenc@prehook=\toks17
 \inpenc@posthook=\toks18
 )
-(/usr/local/texlive/2025/texmf-dist/tex/generic/babel/babel.sty
-Package: babel 2025/02/14 v25.4 The multilingual framework for pdfLaTeX, LuaLaT
+(S:\MiKTeX\tex/generic/babel\babel.sty
+Package: babel 2025/01/01 v25.1 The multilingual framework for pdfLaTeX, LuaLaT
 eX and XeLaTeX
 \babel@savecnt=\count271
 \U@D=\dimen142
-\l@unhyphenated=\language90
+\l@unhyphenated=\language79
 
-(/usr/local/texlive/2025/texmf-dist/tex/generic/babel/txtbabel.def)
+(S:\MiKTeX\tex/generic/babel\txtbabel.def)
 \bbl@readstream=\read2
 \bbl@dirlevel=\count272
 
-(/usr/local/texlive/2025/texmf-dist/tex/generic/babel-spanish/spanish.ldf
+*************************************
+* Local config file bblopts.cfg used
+*
+(S:\MiKTeX\tex/latex/arabi\bblopts.cfg
+File: bblopts.cfg 2005/09/08 v0.1 add Arabic and Farsi to "declared" options of
+ babel
+)
+(S:\MiKTeX\tex/latex/babel-spanish\spanish.ldf
 Language: spanish.ldf 2021/05/27 v5.0q Spanish support from the babel system
 \es@quottoks=\toks19
 \es@quotdepth=\count273
@@ -49,14 +55,14 @@ Package babel Info: Making . an active character on input line 675.
 Package babel Info: Making < an active character on input line 722.
 Package babel Info: Making > an active character on input line 722.
 ))
-(/usr/local/texlive/2025/texmf-dist/tex/generic/babel/locale/es/babel-spanish.t
-ex
+(S:\MiKTeX\tex/generic/babel/locale/es\babel-spanish.tex
 Package babel Info: Importing font and identification data for spanish
 (babel)             from babel-es.ini. Reported on input line 11.
-) (/usr/local/texlive/2025/texmf-dist/tex/latex/tools/xspace.sty
+)
+(S:\MiKTeX\tex/latex/tools\xspace.sty
 Package: xspace 2014/10/28 v1.13 Space after command names (DPC,MH)
 )
-(/usr/local/texlive/2025/texmf-dist/tex/latex/titlesec/titlesec.sty
+(S:\MiKTeX\tex/latex/titlesec\titlesec.sty
 Package: titlesec 2025/01/04 v2.17 Sectioning titles
 \ttl@box=\box52
 \beforetitleunit=\skip51
@@ -68,11 +74,11 @@ Package: titlesec 2025/01/04 v2.17 Sectioning titles
 \titlewidthlast=\dimen146
 \titlewidthfirst=\dimen147
 )
-(/usr/local/texlive/2025/texmf-dist/tex/latex/etoolbox/etoolbox.sty
-Package: etoolbox 2025/02/11 v2.5l e-TeX tools for LaTeX (JAW)
+(S:\MiKTeX\tex/latex/etoolbox\etoolbox.sty
+Package: etoolbox 2020/10/05 v2.5k e-TeX tools for LaTeX (JAW)
 \etb@tempcnta=\count274
 )
-(/usr/local/texlive/2025/texmf-dist/tex/latex/fancyhdr/fancyhdr.sty
+(S:\MiKTeX\tex/latex/fancyhdr\fancyhdr.sty
 Package: fancyhdr 2025/02/07 v5.2 Extensive control of page headers and footers
 
 \f@nch@headwidth=\skip53
@@ -91,37 +97,37 @@ Package: fancyhdr 2025/02/07 v5.2 Extensive control of page headers and footers
 \f@nch@widthR=\skip66
 \@temptokenb=\toks21
 )
-(/usr/local/texlive/2025/texmf-dist/tex/latex/graphics/graphicx.sty
+(S:\MiKTeX\tex/latex/graphics\graphicx.sty
 Package: graphicx 2021/09/16 v1.2d Enhanced LaTeX Graphics (DPC,SPQR)
 
-(/usr/local/texlive/2025/texmf-dist/tex/latex/graphics/keyval.sty
+(S:\MiKTeX\tex/latex/graphics\keyval.sty
 Package: keyval 2022/05/29 v1.15 key=value parser (DPC)
 \KV@toks@=\toks22
 )
-(/usr/local/texlive/2025/texmf-dist/tex/latex/graphics/graphics.sty
+(S:\MiKTeX\tex/latex/graphics\graphics.sty
 Package: graphics 2024/08/06 v1.4g Standard LaTeX Graphics (DPC,SPQR)
 
-(/usr/local/texlive/2025/texmf-dist/tex/latex/graphics/trig.sty
+(S:\MiKTeX\tex/latex/graphics\trig.sty
 Package: trig 2023/12/02 v1.11 sin cos tan (DPC)
 )
-(/usr/local/texlive/2025/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
+(S:\MiKTeX\tex/latex/graphics-cfg\graphics.cfg
 File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
 )
 Package graphics Info: Driver file: pdftex.def on input line 106.
 
-(/usr/local/texlive/2025/texmf-dist/tex/latex/graphics-def/pdftex.def
+(S:\MiKTeX\tex/latex/graphics-def\pdftex.def
 File: pdftex.def 2024/04/13 v1.2c Graphics/color driver for pdftex
 ))
 \Gin@req@height=\dimen148
 \Gin@req@width=\dimen149
 )
-(/usr/local/texlive/2025/texmf-dist/tex/latex/caption/subcaption.sty
+(S:\MiKTeX\tex/latex/caption\subcaption.sty
 Package: subcaption 2023/07/28 v1.6b Sub-captions (AR)
 
-(/usr/local/texlive/2025/texmf-dist/tex/latex/caption/caption.sty
+(S:\MiKTeX\tex/latex/caption\caption.sty
 Package: caption 2023/08/05 v3.6o Customizing captions (AR)
 
-(/usr/local/texlive/2025/texmf-dist/tex/latex/caption/caption3.sty
+(S:\MiKTeX\tex/latex/caption\caption3.sty
 Package: caption3 2023/07/31 v2.4d caption3 kernel (AR)
 \caption@tempdima=\dimen150
 \captionmargin=\dimen151
@@ -141,7 +147,7 @@ Package caption Info: New subtype `subfigure' on input line 238.
 Package caption Info: New subtype `subtable' on input line 238.
 \c@subtable=\count278
 )
-(/usr/local/texlive/2025/texmf-dist/tex/latex/listings/listings.sty
+(S:\MiKTeX\tex/latex/listings\listings.sty
 \lst@mode=\count279
 \lst@gtempboxa=\box53
 \lst@token=\toks23
@@ -155,21 +161,21 @@ Package caption Info: New subtype `subtable' on input line 238.
 \lst@lineno=\count284
 \lst@maxwidth=\dimen161
 
-(/usr/local/texlive/2025/texmf-dist/tex/latex/listings/lstpatch.sty
+(S:\MiKTeX\tex/latex/listings\lstpatch.sty
 File: lstpatch.sty 2024/09/23 1.10c (Carsten Heinz)
 )
-(/usr/local/texlive/2025/texmf-dist/tex/latex/listings/lstmisc.sty
+(S:\MiKTeX\tex/latex/listings\lstmisc.sty
 File: lstmisc.sty 2024/09/23 1.10c (Carsten Heinz)
 \c@lstnumber=\count285
 \lst@skipnumbers=\count286
 \lst@framebox=\box54
 )
-(/usr/local/texlive/2025/texmf-dist/tex/latex/listings/listings.cfg
+(S:\MiKTeX\tex/latex/listings\listings.cfg
 File: listings.cfg 2024/09/23 1.10c listings configuration
 ))
 Package: listings 2024/09/23 1.10c (Carsten Heinz)
 
-(/usr/local/texlive/2025/texmf-dist/tex/latex/enumitem/enumitem.sty
+(S:\MiKTeX\tex/latex/enumitem\enumitem.sty
 Package: enumitem 2025/02/06 v3.11 Customized lists
 \labelindent=\skip67
 \enit@outerparindent=\dimen162
@@ -178,7 +184,7 @@ Package: enumitem 2025/02/06 v3.11 Customized lists
 \enit@count@id=\count287
 \enitdp@description=\count288
 )
-(/usr/local/texlive/2025/texmf-dist/tex/latex/float/float.sty
+(S:\MiKTeX\tex/latex/float\float.sty
 Package: float 2001/11/08 v1.3d Float enhancements (AL)
 \c@float@type=\count289
 \float@exts=\toks25
@@ -186,53 +192,53 @@ Package: float 2001/11/08 v1.3d Float enhancements (AL)
 \@float@everytoks=\toks26
 \@floatcapt=\box57
 )
-(/usr/local/texlive/2025/texmf-dist/tex/latex/hyperref/hyperref.sty
+(S:\MiKTeX\tex/latex/hyperref\hyperref.sty
 Package: hyperref 2024-11-05 v7.01l Hypertext links for LaTeX
 
-(/usr/local/texlive/2025/texmf-dist/tex/generic/iftex/iftex.sty
+(S:\MiKTeX\tex/generic/iftex\iftex.sty
 Package: iftex 2024/12/12 v1.0g TeX engine tests
 )
-(/usr/local/texlive/2025/texmf-dist/tex/latex/kvsetkeys/kvsetkeys.sty
+(S:\MiKTeX\tex/latex/kvsetkeys\kvsetkeys.sty
 Package: kvsetkeys 2022-10-05 v1.19 Key value parser (HO)
 )
-(/usr/local/texlive/2025/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.sty
+(S:\MiKTeX\tex/generic/kvdefinekeys\kvdefinekeys.sty
 Package: kvdefinekeys 2019-12-19 v1.6 Define keys (HO)
 )
-(/usr/local/texlive/2025/texmf-dist/tex/generic/pdfescape/pdfescape.sty
+(S:\MiKTeX\tex/generic/pdfescape\pdfescape.sty
 Package: pdfescape 2019/12/09 v1.15 Implements pdfTeX's escape features (HO)
 
-(/usr/local/texlive/2025/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty
+(S:\MiKTeX\tex/generic/ltxcmds\ltxcmds.sty
 Package: ltxcmds 2023-12-04 v1.26 LaTeX kernel commands for general use (HO)
 )
-(/usr/local/texlive/2025/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty
+(S:\MiKTeX\tex/generic/pdftexcmds\pdftexcmds.sty
 Package: pdftexcmds 2020-06-27 v0.33 Utility functions of pdfTeX for LuaTeX (HO
 )
 
-(/usr/local/texlive/2025/texmf-dist/tex/generic/infwarerr/infwarerr.sty
+(S:\MiKTeX\tex/generic/infwarerr\infwarerr.sty
 Package: infwarerr 2019/12/03 v1.5 Providing info/warning/error messages (HO)
 )
 Package pdftexcmds Info: \pdf@primitive is available.
 Package pdftexcmds Info: \pdf@ifprimitive is available.
 Package pdftexcmds Info: \pdfdraftmode found.
 ))
-(/usr/local/texlive/2025/texmf-dist/tex/latex/hycolor/hycolor.sty
+(S:\MiKTeX\tex/latex/hycolor\hycolor.sty
 Package: hycolor 2020-01-27 v1.10 Color options for hyperref/bookmark (HO)
 )
-(/usr/local/texlive/2025/texmf-dist/tex/latex/hyperref/nameref.sty
+(S:\MiKTeX\tex/latex/hyperref\nameref.sty
 Package: nameref 2023-11-26 v2.56 Cross-referencing by name of section
 
-(/usr/local/texlive/2025/texmf-dist/tex/latex/refcount/refcount.sty
+(S:\MiKTeX\tex/latex/refcount\refcount.sty
 Package: refcount 2019/12/15 v3.6 Data extraction from label references (HO)
 )
-(/usr/local/texlive/2025/texmf-dist/tex/generic/gettitlestring/gettitlestring.s
-ty
+(S:\MiKTeX\tex/generic/gettitlestring\gettitlestring.sty
 Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
- (/usr/local/texlive/2025/texmf-dist/tex/latex/kvoptions/kvoptions.sty
+
+(S:\MiKTeX\tex/latex/kvoptions\kvoptions.sty
 Package: kvoptions 2022-06-15 v3.15 Key value format for package options (HO)
 ))
 \c@section@level=\count290
 )
-(/usr/local/texlive/2025/texmf-dist/tex/generic/stringenc/stringenc.sty
+(S:\MiKTeX\tex/generic/stringenc\stringenc.sty
 Package: stringenc 2019/11/29 v1.12 Convert strings between diff. encodings (HO
 )
 )
@@ -240,17 +246,17 @@ Package: stringenc 2019/11/29 v1.12 Convert strings between diff. encodings (HO
 \Hy@linkcounter=\count291
 \Hy@pagecounter=\count292
 
-(/usr/local/texlive/2025/texmf-dist/tex/latex/hyperref/pd1enc.def
+(S:\MiKTeX\tex/latex/hyperref\pd1enc.def
 File: pd1enc.def 2024-11-05 v7.01l Hyperref: PDFDocEncoding definition (HO)
 Now handling font encoding PD1 ...
 ... no UTF-8 mapping file for font encoding PD1
 )
-(/usr/local/texlive/2025/texmf-dist/tex/generic/intcalc/intcalc.sty
+(S:\MiKTeX\tex/generic/intcalc\intcalc.sty
 Package: intcalc 2019/12/15 v1.3 Expandable calculations with integers (HO)
 )
 \Hy@SavedSpaceFactor=\count293
 
-(/usr/local/texlive/2025/texmf-dist/tex/latex/hyperref/puenc.def
+(S:\MiKTeX\tex/latex/hyperref\puenc.def
 File: puenc.def 2024-11-05 v7.01l Hyperref: PDF Unicode definition (HO)
 Now handling font encoding PU ...
 ... no UTF-8 mapping file for font encoding PU
@@ -263,18 +269,17 @@ Package hyperref Info: Backreferencing OFF on input line 4177.
 Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
 Package hyperref Info: Bookmarks ON on input line 4424.
 \c@Hy@tempcnt=\count294
-
-(/usr/local/texlive/2025/texmf-dist/tex/latex/url/url.sty
+ (S:\MiKTeX\tex/latex/url\url.sty
 \Urlmuskip=\muskip17
 Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
 )
 LaTeX Info: Redefining \url on input line 4763.
 \XeTeXLinkMargin=\dimen164
 
-(/usr/local/texlive/2025/texmf-dist/tex/generic/bitset/bitset.sty
+(S:\MiKTeX\tex/generic/bitset\bitset.sty
 Package: bitset 2019/12/09 v1.3 Handle bit-vector datatype (HO)
 
-(/usr/local/texlive/2025/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty
+(S:\MiKTeX\tex/generic/bigintcalc\bigintcalc.sty
 Package: bigintcalc 2019/12/15 v1.5 Expandable calculations on big integers (HO
 )
 ))
@@ -289,7 +294,7 @@ Package hyperref Info: Link coloring OFF on input line 6062.
 Package hyperref Info: Link coloring with OCG OFF on input line 6067.
 Package hyperref Info: PDF/A mode OFF on input line 6072.
 
-(/usr/local/texlive/2025/texmf-dist/tex/latex/base/atbegshi-ltx.sty
+(S:\MiKTeX\tex/latex/base\atbegshi-ltx.sty
 Package: atbegshi-ltx 2021/01/10 v1.0c Emulation of the original atbegshi
 package with kernel methods
 )
@@ -299,10 +304,10 @@ package with kernel methods
 )
 Package hyperref Info: Driver (autodetected): hpdftex.
 
-(/usr/local/texlive/2025/texmf-dist/tex/latex/hyperref/hpdftex.def
+(S:\MiKTeX\tex/latex/hyperref\hpdftex.def
 File: hpdftex.def 2024-11-05 v7.01l Hyperref driver for pdfTeX
 
-(/usr/local/texlive/2025/texmf-dist/tex/latex/base/atveryend-ltx.sty
+(S:\MiKTeX\tex/latex/base\atveryend-ltx.sty
 Package: atveryend-ltx 2020/08/19 v1.0a Emulation of the original atveryend pac
 kage
 with kernel methods
@@ -310,46 +315,42 @@ with kernel methods
 \Fld@listcount=\count299
 \c@bookmark@seq@number=\count300
 
-(/usr/local/texlive/2025/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty
+(S:\MiKTeX\tex/latex/rerunfilecheck\rerunfilecheck.sty
 Package: rerunfilecheck 2022-07-10 v1.10 Rerun checks for auxiliary files (HO)
 
-(/usr/local/texlive/2025/texmf-dist/tex/generic/uniquecounter/uniquecounter.sty
+(S:\MiKTeX\tex/generic/uniquecounter\uniquecounter.sty
 Package: uniquecounter 2019/12/15 v1.4 Provide unlimited unique counter (HO)
 )
 Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
 85.
 )
 \Hy@SectionHShift=\skip68
-) (/usr/local/texlive/2025/texmf-dist/tex/latex/srcltx/srcltx.sty
+)
+(S:\MiKTeX\tex/latex/srcltx\srcltx.sty
 Package: srcltx 2006/11/12 v1.6 Source specials for inverse search in DVI files
 
-
-(/usr/local/texlive/2025/texmf-dist/tex/latex/base/ifthen.sty
+ (S:\MiKTeX\tex/latex/base\ifthen.sty
 Package: ifthen 2024/03/16 v1.1e Standard LaTeX ifthen package (DPC)
 )
 \src@lastline=\count301
 \src@new@everypar=\toks27
 \src@new@output=\toks28
 )
-(/usr/local/texlive/2025/texmf-dist/tex/latex/tools/verbatim.sty
+(S:\MiKTeX\tex/latex/tools\verbatim.sty
 Package: verbatim 2024-01-22 v1.5x LaTeX2e package for verbatim enhancements
 \every@verbatim=\toks29
 \verbatim@line=\toks30
 \verbatim@in@stream=\read3
-)
-(/usr/local/texlive/2025/texmf-dist/tex/latex/base/makeidx.sty
+) (S:\MiKTeX\tex/latex/base\makeidx.sty
 Package: makeidx 2021/10/04 v1.0m Standard LaTeX package
-)
-(/usr/local/texlive/2025/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
+) (S:\MiKTeX\tex/latex/l3backend\l3backend-pdftex.def
 File: l3backend-pdftex.def 2024-05-08 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count302
 \l__pdf_internal_box=\box58
-)
-(./portada.aux
+) (portada.aux
 LaTeX Info: Redefining \. on input line 11.
 LaTeX Info: Redefining \% on input line 11.
- (./Secciones/introduccion.aux) (./Secciones/marcoteorico.aux)
-(./Secciones/objetivos.aux) (./Secciones/desarrollo.aux))
+)
 \openout1 = `portada.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 168.
@@ -373,7 +374,7 @@ LaTeX Font Info:    ... okay on input line 168.
 LaTeX Info: Redefining \. on input line 168.
 LaTeX Info: Redefining \% on input line 168.
 
-(/usr/local/texlive/2025/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+(S:\MiKTeX\tex/context/base/mkii\supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count303
 \scratchdimen=\dimen167
@@ -386,14 +387,13 @@ LaTeX Info: Redefining \% on input line 168.
 \MPnumerator=\count307
 \makeMPintoPDFobject=\count308
 \everyMPtoPDFconversion=\toks32
-) (/usr/local/texlive/2025/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
+) (S:\MiKTeX\tex/latex/epstopdf-pkg\epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
 85.
 
-(/usr/local/texlive/2025/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
-File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
-e
+(S:\MiKTeX\tex/latex/00miktex\epstopdf-sys.cfg
+File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
 ))
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: float package is loaded.
@@ -402,18 +402,21 @@ Package caption Info: listings package is loaded.
 Package caption Info: End \AtBeginDocument code.
 \c@lstlisting=\count309
 Package hyperref Info: Link coloring OFF on input line 168.
-
-(./portada.out) (./portada.out)
+ (portada.out) (portada.out)
 \@outlinefile=\write3
 \openout3 = `portada.out'.
 
-<img/logoUAM.png, id=64, 456.7464pt x 134.4222pt>
+<img/logoUAM.png, id=171, 456.7464pt x 134.4222pt>
+File: img/logoUAM.png Graphic file (type png)
+<use img/logoUAM.png>
+Package pdftex.def Info: img/logoUAM.png  used on input line 177.
+(pdftex.def)             Requested size: 274.04996pt x 80.65393pt.
 
 
 [0
 
-{/usr/local/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-(./portada.toc
+{C:/Users/molap/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map} <./img/logoUA
+M.png>] (portada.toc
 LaTeX Info: Redefining \. on input line 1.
 LaTeX Info: Redefining \% on input line 1.
 
@@ -426,20 +429,22 @@ Package spanish Warning: Replacing `OT1/cmr/bx/sc' by
 (spanish)                faked small caps on input line 2.
 
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <10.95> on input line 4.
+(Font)              <10.95> on input line 5.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 4.
+(Font)              <8> on input line 5.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 4.
-)
+(Font)              <6> on input line 5.
+
+
+[1
+
+])
 \tf@toc=\write4
 \openout4 = `portada.toc'.
 
 
 
-[1
-
-] (./portada.lof
+[2] (portada.lof
 LaTeX Info: Redefining \. on input line 1.
 LaTeX Info: Redefining \% on input line 1.
 )
@@ -448,83 +453,46 @@ LaTeX Info: Redefining \% on input line 1.
 
 
 
-[2
+[3
 
-] (./portada.lol)
+] (portada.lol)
 \tf@lol=\write6
 \openout6 = `portada.lol'.
 
 
 
-[3
+[4
 
 
 ]
 Cap\'{\i }tulo 1.
+Package srcltx Info: Expanded filename `Secciones/introduccion' to `Secciones/i
+ntroduccion.tex' on input line 240.
+:<+ Secciones/introduccion.tex
+(Secciones/introduccion.tex)
+:<-
 
 
 [1
 
 
 ]
-:<+ Secciones/introduccion.tex
-\openout2 = `Secciones/introduccion.aux'.
+Cap\'{\i }tulo 2.
+Package srcltx Info: Expanded filename `Secciones/marcoteorico.tex' to `Seccion
+es/marcoteorico.tex' on input line 243.
+:<+ Secciones/marcoteorico.tex
+(Secciones/marcoteorico.tex)
+:<-
 
-(./Secciones/introduccion.tex)
-
-LaTeX Info: Redefining \. on input line 240.
-LaTeX Info: Redefining \% on input line 240.
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 13.59999pt, for example:
-(fancyhdr)                \setlength{\headheight}{13.59999pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
 [2
 
-
 ]
-:<-
-Cap\'{\i }tulo 2.
-
-
-[3
-
-
-
-]
-:<+ Secciones/marcoteorico.tex.tex
-\openout2 = `Secciones/marcoteorico.aux'.
-
-(./Secciones/marcoteorico.tex)
-
-LaTeX Info: Redefining \. on input line 243.
-LaTeX Info: Redefining \% on input line 243.
-
-Package fancyhdr Warning: \headheight is too small (12.0pt): 
-(fancyhdr)                Make it at least 13.59999pt, for example:
-(fancyhdr)                \setlength{\headheight}{13.59999pt}.
-(fancyhdr)                You might also make \topmargin smaller:
-(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
-
-[4
-
-
-]
-:<-
 Cap\'{\i }tulo 3.
-
-
-[5
-
-
-
-]
-:<+ Secciones/objetivos.tex.tex
-\openout2 = `Secciones/objetivos.aux'.
-
-(./Secciones/objetivos.tex
+Package srcltx Info: Expanded filename `Secciones/objetivos.tex' to `Secciones/
+objetivos.tex' on input line 246.
+:<+ Secciones/objetivos.tex
+(Secciones/objetivos.tex
 Underfull \hbox (badness 10000) in paragraph at lines 2--3
 
  []
@@ -535,9 +503,24 @@ Underfull \hbox (badness 10000) in paragraph at lines 12--13
  []
 
 )
+:<-
 
-LaTeX Info: Redefining \. on input line 246.
-LaTeX Info: Redefining \% on input line 246.
+
+[3
+
+]
+Cap\'{\i }tulo 4.
+Package srcltx Info: Expanded filename `Secciones/desarrollo.tex' to `Secciones
+/desarrollo.tex' on input line 249.
+:<+ Secciones/desarrollo.tex
+(Secciones/desarrollo.tex
+
+[4
+
+]
+
+LaTeX Info: Redefining \. on input line 47.
+LaTeX Info: Redefining \% on input line 47.
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 13.59999pt, for example:
@@ -545,26 +528,57 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[6
+[5]
+LaTeX Font Info:    Trying to load font information for OMS+cmtt on input line 
+64.
+LaTeX Font Info:    No file OMScmtt.fd. on input line 64.
 
 
-]
+LaTeX Font Warning: Font shape `OMS/cmtt/m/n' undefined
+(Font)              using `OMS/cmsy/m/n' instead
+(Font)              for symbol `textbraceleft' on input line 64.
+
+)
 :<-
-Cap\'{\i }tulo 4.
+
+
+LaTeX Info: Redefining \. on input line 251.
+LaTeX Info: Redefining \% on input line 251.
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[6]
+Cap\'{\i }tulo 5.
+Package srcltx Info: Expanded filename `Secciones/resultados.tex' to `Secciones
+/resultados.tex' on input line 252.
+:<+ Secciones/resultados.tex
+(Secciones/resultados.tex
+! Undefined control sequence.
+l.17 ... (Horas) & $\approx 2.19$ horas ($@30\text
+                                                  { FPS}$) \\
+The control sequence at the end of the top line
+of your error message was never \def'ed. If you have
+misspelled it (e.g., `\hobx'), type `I' and the correct
+spelling (e.g., `I\hbox'). Otherwise just continue,
+and I'll forget about whatever was undefined.
+
 
 
 [7
 
-
-
 ]
-:<+ Secciones/desarrollo.tex.tex
-\openout2 = `Secciones/desarrollo.aux'.
+Overfull \hbox (121.7851pt too wide) in paragraph at lines 47--58
+ [][][] 
+ []
 
-(./Secciones/desarrollo.tex)
 
-LaTeX Info: Redefining \. on input line 249.
-LaTeX Info: Redefining \% on input line 249.
+
+LaTeX Info: Redefining \. on input line 67.
+LaTeX Info: Redefining \% on input line 67.
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 13.59999pt, for example:
@@ -572,71 +586,252 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 (fancyhdr)                You might also make \topmargin smaller:
 (fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-[8
-
-
-]
+[8])
 :<-
-Cap\'{\i }tulo 5.
 
 
-[9
+LaTeX Info: Redefining \. on input line 254.
+LaTeX Info: Redefining \% on input line 254.
 
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
 
-
-]
+[9]
 Cap\'{\i }tulo 6.
-
+Package srcltx Info: Expanded filename `Secciones/conclusiones.tex' to `Seccion
+es/conclusiones.tex' on input line 255.
+:<+ Secciones/conclusiones.tex
+(Secciones/conclusiones.tex
 
 [10
 
 ]
 
-[11
+LaTeX Info: Redefining \. on input line 47.
+LaTeX Info: Redefining \% on input line 47.
 
-] (./portada.aux
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[11])
+:<-
+
+
+LaTeX Info: Redefining \. on input line 259.
+LaTeX Info: Redefining \% on input line 259.
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[12]
+Ap\'{e}ndice A.
+Package srcltx Info: Expanded filename `Secciones/Anexos/anexoA.tex' to `Seccio
+nes/Anexos/anexoA.tex' on input line 260.
+:<+ Secciones/Anexos/anexoA.tex
+(Secciones/Anexos/anexoA.tex
+
+LaTeX Warning: Reference `sec:requisitos-sistema' on page 13 undefined on input
+ line 3.
+
+(S:\MiKTeX\tex/latex/listings\lstlang1.sty
+File: lstlang1.sty 2024/09/23 1.10c listings language file
+)
+(S:\MiKTeX\tex/latex/listings\lstlang1.sty
+File: lstlang1.sty 2024/09/23 1.10c listings language file
+)
+Package hyperref Info: bookmark level for unknown lstlisting defaults to 0 on i
+nput line 28.
+
+
+[13
+
+]
+LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <10> not available
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 40.
+LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <14.4> not available
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 104.
+
+
+LaTeX Info: Redefining \. on input line 107.
+LaTeX Info: Redefining \% on input line 107.
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[14]
+
+! LaTeX Error: Invalid UTF-8 byte sequence (�\expandafter).
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.149 echo 'Esperando a que PostgreSQL esé 
+                                            listo...' &&
+The document does not appear to be in UTF-8 encoding.
+Try adding \UseRawInputEncoding as the first line of the file
+or specify an encoding such as \usepackage [latin1]{inputenc}
+in the document preamble.
+Alternatively, save the file in UTF-8 using your editor or another tool
+
+
+! LaTeX Error: Invalid UTF-8 byte "A9.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.149 echo 'Esperando a que PostgreSQL esé 
+                                            listo...' &&
+The document does not appear to be in UTF-8 encoding.
+Try adding \UseRawInputEncoding as the first line of the file
+or specify an encoding such as \usepackage [latin1]{inputenc}
+in the document preamble.
+Alternatively, save the file in UTF-8 using your editor or another tool
+
+
+
+LaTeX Info: Redefining \. on input line 156.
+LaTeX Info: Redefining \% on input line 156.
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[15]
+
+LaTeX Info: Redefining \. on input line 204.
+LaTeX Info: Redefining \% on input line 204.
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[16]
+
+LaTeX Info: Redefining \. on input line 262.
+LaTeX Info: Redefining \% on input line 262.
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[17]
+
+LaTeX Info: Redefining \. on input line 315.
+LaTeX Info: Redefining \% on input line 315.
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[18]
+LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <12> not available
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 323.
+
+
+LaTeX Info: Redefining \. on input line 361.
+LaTeX Info: Redefining \% on input line 361.
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[19]
+
+LaTeX Info: Redefining \. on input line 418.
+LaTeX Info: Redefining \% on input line 418.
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[20])
+:<-
+
+
+LaTeX Info: Redefining \. on input line 266.
+LaTeX Info: Redefining \% on input line 266.
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 13.59999pt, for example:
+(fancyhdr)                \setlength{\headheight}{13.59999pt}.
+(fancyhdr)                You might also make \topmargin smaller:
+(fancyhdr)                \addtolength{\topmargin}{-1.59999pt}.
+
+[21]
+
+[22
+
+] (portada.aux
 LaTeX Info: Redefining \. on input line 11.
 LaTeX Info: Redefining \% on input line 11.
- (./Secciones/introduccion.aux)
-(./Secciones/marcoteorico.aux) (./Secciones/objetivos.aux)
-(./Secciones/desarrollo.aux))
+)
  ***********
-LaTeX2e <2024-11-01> patch level 2
-L3 programming layer <2025-01-18>
+LaTeX2e <2024-11-01> patch level 1
+L3 programming layer <2024-12-25>
  ***********
 
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
 
-Package rerunfilecheck Warning: File `portada.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
+LaTeX Warning: There were undefined references.
 
-Package rerunfilecheck Info: Checksums for `portada.out':
-(rerunfilecheck)             Before: 7354DCB1F81F7DB2700255CFE6031BB5;2791
-(rerunfilecheck)             After:  7E01122A7DDED2FCDE2251E1D1B54540;3313.
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
+Package rerunfilecheck Info: File `portada.out' has not changed.
+(rerunfilecheck)             Checksum: BD7DD04F42353AE63C72815CD3254B36;8945.
  ) 
 Here is how much of TeX's memory you used:
- 14145 strings out of 473190
- 229985 string characters out of 5715801
- 639138 words of memory out of 5000000
- 37179 multiletter control sequences out of 15000+600000
- 564517 words of font info for 55 fonts, out of 8000000 for 9000
+ 14899 strings out of 473535
+ 234194 string characters out of 5731770
+ 1047550 words of memory out of 5000000
+ 37678 multiletter control sequences out of 15000+600000
+ 566910 words of font info for 65 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,12n,79p,1024b,497s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
-></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
-</usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx8.pfb></
-usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb></
-usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></us
-r/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/
-local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/l
-ocal/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on portada.pdf (15 pages, 121592 bytes).
+ 75i,12n,79p,1026b,2099s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ <C:\Users\molap\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tctt
+1000.pk> <C:\Users\molap\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi60
+0\tcrm1095.pk><S:/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx10.pfb><S:/MiKTeX/f
+onts/type1/public/amsfonts/cm/cmbx12.pfb><S:/MiKTeX/fonts/type1/public/amsfonts
+/cm/cmbx8.pfb><S:/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx9.pfb><S:/MiKTeX/fo
+nts/type1/public/amsfonts/cm/cmcsc10.pfb><S:/MiKTeX/fonts/type1/public/amsfonts
+/cm/cmitt10.pfb><S:/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><S:/MiKTeX
+/fonts/type1/public/amsfonts/cm/cmr10.pfb><S:/MiKTeX/fonts/type1/public/amsfont
+s/cm/cmr12.pfb><S:/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><S:/MiKTeX/fo
+nts/type1/public/amsfonts/cm/cmr9.pfb><S:/MiKTeX/fonts/type1/public/amsfonts/cm
+/cmsy10.pfb><S:/MiKTeX/fonts/type1/public/amsfonts/cm/cmti10.pfb><S:/MiKTeX/fon
+ts/type1/public/amsfonts/cm/cmtt10.pfb><S:/MiKTeX/fonts/type1/public/amsfonts/c
+m/cmtt12.pfb><S:/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt9.pfb>
+Output written on portada.pdf (27 pages, 451399 bytes).
 PDF statistics:
- 211 PDF objects out of 1000 (max. 8388607)
- 174 compressed objects within 2 object streams
- 41 named destinations out of 1000 (max. 500000)
- 126 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 673 PDF objects out of 1000 (max. 8388607)
+ 252 named destinations out of 1000 (max. 500000)
+ 342 words of extra memory for PDF output out of 10000 (max. 10000000)
 

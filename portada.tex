@@ -95,7 +95,7 @@
 % ========================================
 % GRÁFICOS E IMÁGENES
 % ========================================
-\usepackage[draft]{graphicx}               % Inclusión y manipulación de imágenes [draft]-> No inserta las imágenes en el PDF
+\usepackage{graphicx}               % Inclusión y manipulación de imágenes [draft]-> No inserta las imágenes en el PDF
 \usepackage{subcaption}             % Subtítulos para subfiguras (subfigure)
 %\usepackage{tikz}                   % Creación de gráficos vectoriales
 %\usetikzlibrary{shapes, arrows}     % Formas y flechas para TikZ
@@ -237,20 +237,28 @@
 	
 	% Capítulos 
 	\chapter{Introducción del Proyecto}
-	\include{Secciones/introduccion}
+	\input{Secciones/introduccion}
 	
 	\chapter{Marco teórico}
-	\include{Secciones/marcoteorico.tex}
+	\input{Secciones/marcoteorico.tex}
 		
 	\chapter{Objetivos y metodología}
-	\include{Secciones/objetivos.tex}
+	\input{Secciones/objetivos.tex}
 	
 	\chapter{Desarrollo}
-	\include{Secciones/desarrollo.tex}
+	\input{Secciones/desarrollo.tex}
 	
 	\chapter{Resultados}
-	
+	\input{Secciones/resultados.tex}
+		
 	\chapter{Conclusiones y Trabajo futuro}
+	\input{Secciones/conclusiones.tex}
+	
+	\appendixtitleformat
+	\appendix
+	\chapter{Uso de Docker y Docker Compose}
+	\input{Secciones/Anexos/anexoA.tex}	
+	
 	
 	
 	% Referencias

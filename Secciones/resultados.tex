@@ -1,0 +1,70 @@
+El siguiente capítulo presenta y analiza los resultados obtenidos tras la ejecución del \textit{pipeline} de detección, rastreo y análisis grupal sobre la totalidad del conjunto de videos aéreos.
+
+El sistema unificado de análisis (YOLOv11x + DeepSORT + Algoritmo PDF) fue ejecutado de forma concurrente sobre 8 secuencias de video, demostrando la eficacia del enfoque de procesamiento directo sobre el \textit{stream} de video y la capacidad del sistema para escalar el análisis de manera automatizada.
+
+\section{Rendimiento y Volumen de Datos Procesados}
+El proceso concurrente analizó un volumen significativo de datos, validando la estabilidad y eficiencia del \textit{pipeline} refactorizado.
+
+\begin{table}[h]
+	\centering
+	\caption{Métricas generales del procesamiento de videos}
+	\begin{tabular}{|l|c|}
+		\hline
+		\textbf{Métrica} & \textbf{Valor Total} \\
+		\hline
+		Total de Videos Analizados & 8 \\
+		Duración Total Analizada (Frames) & \textbf{236,785 frames} \\
+		Duración Total Estimada (Horas) & $\approx 2.19$ horas ($@30\text{ FPS}$) \\
+		Total de Identidades Únicas (Track IDs) & \textbf{4,097 personas} \\
+		Total de Grupos Únicos Detectados & \textbf{952 grupos} \\
+		\hline
+	\end{tabular}
+\end{table}
+
+El sistema logró procesar eficientemente más de 230,000 \textit{frames} sin recurrir a la conversión previa a imágenes estáticas, confirmando la optimización del proceso de E/S. La configuración concurrente (\texttt{--max\_workers 4}) en la NVIDIA RTX A5000 permitió una alta tasa de procesamiento por hora.
+
+\section{Resultados de Detección y Rastreo de Individuos}
+La combinación de YOLOv11x y DeepSORT demostró ser robusta para el seguimiento de personas en el entorno aéreo, logrando identificar y mantener la identidad de 4,097 personas únicas en el conjunto de datos.
+
+Se observó una clara correlación entre la fecha de grabación y la densidad poblacional, lo que impactó directamente el volumen de detección:
+
+\begin{itemize}
+	\item \textbf{Baja Densidad (05-02):} En los videos capturados el 2 de mayo (V1, V2, V3), el sistema rastreó un total combinado de \textbf{452 personas únicas}.
+	\item \textbf{Alta Densidad (05-14 y 05-16):} Los días 14 y 16 de mayo registraron una afluencia mucho mayor, con un total de \textbf{1,945} y \textbf{1,700} personas únicas rastreadas, respectivamente.
+\end{itemize}
+
+Este resultado confirma la capacidad del modelo para gestionar entornos de tráfico bajo y alto, un factor clave para la generación de modelos de movilidad precisos.
+
+\section{Caracterización de Grupos Humanos}
+El algoritmo de agrupamiento, basado en proximidad y persistencia temporal, identificó un total de 952 agrupaciones sociales únicas.
+
+\subsection{Volumen de Agrupamiento}
+Los días de mayor densidad poblacional (14 y 16 de mayo) fueron los que generaron el mayor número de interacciones sociales estables:
+
+\begin{table}[h]
+	\centering
+	\caption{Distribución de grupos detectados por fecha de captura}
+	\begin{tabular}{|l|c|c|c|c|}
+		\hline
+		\textbf{Fecha de Captura} & \textbf{Videos} & \textbf{Personas Únicas} & \textbf{Grupos Detectados} & \textbf{Ratio Grupos/Personas} \\
+		\hline
+		05-02-2025 & 3 & 452 & 107 & 1:4.2 \\
+		05-14-2025 & 3 & 1,945 & 382 & 1:5.1 \\
+		05-16-2025 & 2 & 1,700 & 463 & 1:3.7 \\
+		\hline
+		Promedio General & & & & \textbf{1:4.3} \\
+		\hline
+	\end{tabular}
+\end{table}
+
+El ratio promedio indica que por cada \textbf{4.3 individuos únicos} detectados en el área de estudio, se formó al menos \textbf{un grupo} estable a lo largo de las secuencias. Este dato establece una métrica fundamental para modelar la interacción social en el ambiente observado.
+
+\subsection{Persistencia de las Interacciones Sociales}
+Un análisis de los grupos más duraderos (Top 5 en cada video) reveló una gran variabilidad en la persistencia de las interacciones:
+
+\begin{itemize}
+	\item \textbf{Grupos Altamente Persistentes:} En los videos de alta densidad (05-14 y 05-16), se detectaron grupos con duraciones excepcionalmente largas, destacando el \textbf{Grupo 84} (05-14-V2) con \textbf{6,093 frames} (aproximadamente 3 minutos y 23 segundos). Estos grupos representan interacciones de largo plazo, como personas permaneciendo estáticas, o viajando juntas a lo largo de la grabación.
+	\item \textbf{Grupos de Interacción Breve:} En contraste, en el set de videos del 05-02 (baja densidad), el grupo más duradero solo alcanzó \textbf{467 frames} (aproximadamente 15 segundos), y el grupo menos duradero de la muestra fue de solo \textbf{7 frames} (Grupo 2, 05-02-V2), lo que es cercano al umbral de persistencia temporal ($\tau=15$ frames) necesario para la confirmación.
+\end{itemize}
+
+Estos resultados sugieren que el \textit{pipeline} es capaz de diferenciar entre \textbf{encuentros momentáneos} y \textbf{agrupaciones sociales estables}, siendo un elemento crucial para la simulación de redes de comunicación donde la duración del contacto es crítica.

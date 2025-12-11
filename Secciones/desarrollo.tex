@@ -1,7 +1,64 @@
+El desarrollo de este proyecto se estructuró en cuatro fases interconectadas, optimizadas para el análisis eficiente y escalable de grandes volúmenes de datos de video. La principal modificación a la metodología inicial fue la transición de un procesamiento basado en frames a un procesamiento directo sobre el flujo de video (stream), eliminando cuellos de botella de E/S (Input/Output).
+
 \section{Captura y almacenamiento}
+Esta etapa se encarga de la grabación física de los videos aéreos y su almacenamiento inicial en el servidor. Los videos son capturados mediante un dron en áreas de tránsito común dentro del campus universitario, y posteriormente son transferidos a un directorio designado para su procesamiento. La organización inicial de los archivos es fundamental para facilitar el análisis automatizado posterior.
 
-\section{Preprocesamiento}
+\section{Preprocesamiento y orquestación}
+En la metodología inicial, esta fase incluía la conversión intensiva de videos a secuencias de imágenes (frames). Para maximizar la eficiencia y reducir la latencia, esta etapa fue refactorizada, reemplazando la conversión explícita por un procesamiento directo concurrente sobre el archivo de video.
 
-\section{Detección y seguimiento de individuos}
+\subsection{Implementación de la Concurrencia}
+Para manejar múltiples archivos de video simultáneamente, se implementó un sistema basado en \texttt{concurrent.futures.ThreadPoolExecutor} en Python. Este orquestador es el punto de entrada que:
 
-\section{Extracción de características}
+\begin{itemize}
+	\item Escanea un directorio de entrada en busca de todos los archivos \texttt{.mp4}.
+	\item Despacha cada video a un \textit{worker thread} dedicado para su análisis completo.
+	\item Utiliza la potencia de la GPU (NVIDIA RTX A5000) de manera eficiente, limitando el número de workers concurrentes a 4, un número óptimo para balancear la carga de VRAM del modelo YOLOv11x y el rendimiento del sistema.
+\end{itemize}
+
+\section{Detección y seguimiento de individuos (Tracking Unificado)}
+Esta etapa es la base del análisis, encargada de identificar y mantener la identidad de cada persona a lo largo de las secuencias de video.
+
+\subsection{Arquitectura Híbrida YOLO + DeepSORT}
+Para lograr la detección y el seguimiento con alta precisión, se utilizó una arquitectura de dos etapas:
+
+\begin{itemize}
+	\item \textbf{Detección de Objetos (YOLOv11x):}
+	\begin{itemize}
+		\item Se empleó la versión \textit{Extra Large} (\texttt{yolo11x.pt}) del modelo YOLOv11 (You Only Look Once). Este modelo fue seleccionado por su equilibrio entre alta precisión de localización (mAP) y velocidad de inferencia, esencial para el procesamiento en tiempo real.
+		\item El modelo fue configurado para detectar exclusivamente la clase \texttt{persona} (clase 0), optimizando el consumo de recursos.
+	\end{itemize}
+	\item \textbf{Rastreo por Re-Identificación (DeepSORT):}
+	\begin{itemize}
+		\item Los \textit{bounding boxes} generados por YOLO son pasados al algoritmo DeepSORT (Deep Simple Online and Real-time Tracking). DeepSORT asigna un ID de seguimiento (\textit{Track ID}) persistente a cada individuo.
+		\item El algoritmo se basa en el filtro de Kalman para predecir la posición futura y utiliza una red neuronal (como MobileNet, según la configuración) para extraer características de apariencia (\textit{features}) que permiten re-identificar a una persona que ha sido ocluida o ha salido brevemente del campo de visión.
+	\end{itemize}
+\end{itemize}
+
+\subsection{Persistencia de Datos}
+El resultado de este proceso (el \textit{Track ID} y las coordenadas $(x_1, y_1, x_2, y_2)$ para cada persona en cada frame) se guarda inmediatamente en la base de datos PostgreSQL en la tabla \texttt{FrameObjectDetection}.
+
+\section{Extracción y caracterización de grupos}
+Esta fase final emplea los datos de seguimiento guardados para identificar patrones de interacción social (grupos) y generar métricas estadísticas clave.
+
+\subsection{Algoritmo de Agrupamiento PDF}
+La lógica de agrupación se implementa a través de la clase \texttt{GroupTracker}, que replica el algoritmo de agrupamiento basado en:
+
+\begin{itemize}
+	\item \textbf{Proximidad Espacial:} Se considera que dos individuos están en proximidad si la distancia entre sus centroides (calculada en píxeles) es menor a un umbral predefinido (ej. 100 píxeles).
+	\item \textbf{Persistencia Temporal ($\tau$):} Para que una interacción sea clasificada como un grupo, la proximidad debe mantenerse durante un número mínimo de frames (ej. 15 frames). Esto evita la detección de interacciones fugaces o cruces accidentales.
+\end{itemize}
+
+El algoritmo utiliza teoría de grafos, donde los individuos son nodos y los pares estables son aristas, para identificar los componentes conexos (grupos de 2 o más personas) en cada frame.
+
+\subsection{Análisis de Métricas y Reporte Final}
+Una vez que el seguimiento y el agrupamiento de un video han finalizado, el \textit{pipeline} procede a la generación del reporte. Esta fase consulta los datos recién almacenados en las tablas \texttt{GroupDetection} y \texttt{FrameObjectDetection} para calcular las siguientes estadísticas:
+
+\begin{itemize}
+	\item \textbf{Identificación:} Número total de individuos únicos rastreados.
+	\item \textbf{Grupos Únicos:} Cantidad total de identificadores de grupo diferentes encontrados.
+	\item \textbf{Tamaño Promedio:} Tamaño promedio de los grupos detectados.
+	\item \textbf{Duración de Grupos:} Identificación de los grupos más persistentes (número de frames en los que el grupo fue detectado).
+	\item \textbf{Métricas de Grupo:} Aunque no se muestran en el reporte simple, el modelo de datos está diseñado para almacenar métricas de movilidad grupal, como la dispersión (varianza de las distancias entre miembros) y la velocidad promedio del centroide del grupo.
+\end{itemize}
+
+Todos los hallazgos estadísticos y el resumen del proceso se guardan en un documento de texto plano (\texttt{.txt}) con la nomenclatura \texttt{REPORTE\_\{video\_name\}.txt}, cumpliendo con el requisito final del proyecto.
