@@ -1,48 +1,79 @@
 \section{Conclusiones del Proyecto}
-El proyecto ha logrado implementar y validar exitosamente un \textit{pipeline} integral para la construcción de una base de datos de videos aéreos y el análisis automatizado de la movilidad y el comportamiento grupal. Los objetivos planteados han sido cubiertos, destacando las siguientes conclusiones clave:
+El proyecto ha logrado implementar y validar exitosamente un \textit{pipeline} integral para la construcción de una base de datos de videos aéreos y el análisis automatizado de la movilidad y el comportamiento grupal a gran escala. Los objetivos planteados han sido cubiertos de manera exhaustiva, destacando las siguientes conclusiones clave:
 
 \subsection{Eficiencia y Escalabilidad del Sistema}
-La refactorización del \textit{pipeline} hacia un procesamiento directo y concurrente de videos (en lugar de la previa conversión a \textit{frames}) fue la decisión más crítica para la eficiencia.
+La refactorización del \textit{pipeline} hacia un procesamiento directo y concurrente de videos (en lugar de la previa conversión a \textit{frames}) fue la decisión más crítica para la eficiencia, demostrando su efectividad en un despliegue de producción a gran escala.
 
 \begin{itemize}
-	\item El sistema demostró ser altamente escalable, procesando 236,785 \textit{frames} de video (equivalente a más de 2.19 horas) en un tiempo óptimo gracias al uso de \textit{threading} concurrente y la capacidad de la GPU.
-	\item La arquitectura modular permite la fácil integración o reemplazo de componentes clave (ej., cambiar el modelo YOLO o el algoritmo de \textit{tracking}) sin necesidad de reescribir la lógica de orquestación.
+	\item El sistema demostró ser altamente escalable y robusto, procesando exitosamente \textbf{5,554,155 \textit{frames}} de video (equivalente a más de \textbf{51.43 horas} de contenido aéreo) distribuidos en \textbf{180 secuencias de video} capturadas durante un período de 6 meses (mayo a noviembre de 2025). Esta capacidad de procesamiento, lograda mediante \textit{threading} concurrente y el aprovechamiento óptimo de la NVIDIA RTX A5000, valida la viabilidad del sistema para análisis de grandes volúmenes de datos.
+	\item La arquitectura modular permite la fácil integración o reemplazo de componentes clave (ej., cambiar el modelo YOLO o el algoritmo de \textit{tracking}) sin necesidad de reescribir la lógica de orquestación, facilitando la adaptación del sistema a futuras mejoras tecnológicas o cambios en los requisitos del proyecto.
 \end{itemize}
 
-\subsection{Robustez del Análisis Detección-Rastreo}
-La implementación del enfoque híbrido YOLOv11x + DeepSORT garantizó la generación de trayectorias individuales con alta fidelidad, un requisito fundamental para el análisis de grupos.
+\cleardoublepage
+
+\subsection{Validación de Hipótesis y Aportaciones al Campo}
+Los resultados obtenidos validan las hipótesis iniciales del proyecto y realizan contribuciones significativas al campo de análisis de movilidad y comportamiento social:
 
 \begin{itemize}
-	\item Se logró rastrear un total de 4,097 identidades únicas, incluso en escenarios de alta densidad poblacional.
-	\item El rastreo fue lo suficientemente persistente para mantener la identidad individual a través de leves oclusiones o cruces, proporcionando la base de datos necesaria para la simulación de modelos de movilidad.
-\end{itemize}
-
-\subsection{Valoración del Modelo de Agrupamiento}
-El algoritmo de agrupamiento, basado en la proximidad y persistencia temporal ($\tau=15$ \textit{frames}), demostró ser eficaz para caracterizar el comportamiento social.
-
-\begin{itemize}
-	\item Se detectaron 952 grupos únicos, estableciendo una métrica de interacción: por cada 4.3 individuos únicos, se formó un grupo estable en el área de estudio.
-	\item El análisis de la persistencia de los grupos reveló patrones importantes: mientras que los grupos de baja densidad tienden a ser fugaces (duraciones máximas de $\approx$15 segundos), los grupos en escenarios de alta densidad son extremadamente persistentes (duraciones de hasta $\approx$3.4 minutos), lo que apunta a la existencia de grupos estáticos o estructuras de tráfico lento en las áreas observadas.
-	\item La capacidad de extraer métricas (como la dispersión y la duración) convierte la base de datos de video aéreo en una herramienta cuantitativa para calibrar modelos de movilidad y comunicación.
+	\item \textbf{Escalabilidad comprobada:} La capacidad de procesar 180 videos (51+ horas) de forma automatizada y concurrente demuestra que el enfoque propuesto es viable para análisis a escala de ciudad o región, no limitándose a experimentos de laboratorio o muestras reducidas.
+	
+	\item \textbf{Consistencia del modelo de agrupamiento:} La estabilidad del ratio grupos/personas (1:3.0 $\pm$ 0.5) a través de 53 fechas diferentes y condiciones de densidad variables (factor de variación de 27.6:1 entre el día de menor y mayor densidad) valida la robustez del algoritmo y su aplicabilidad general.
+	
+	\item \textbf{Identificación de comportamientos extremos:} La detección de grupos con duraciones de hasta 12 minutos proporciona evidencia empírica de interacciones sociales de largo plazo que son críticas para modelar la propagación de información en redes de comunicación oportunista y para entender dinámicas de uso del espacio público.
+	
+	\item \textbf{Base de datos cuantitativa para calibración:} Los 273,984 individuos rastreados y 92,089 grupos detectados constituyen un conjunto de datos sin precedentes para la calibración y validación de modelos de simulación de movilidad y comunicación en espacios urbanos.
 \end{itemize}
 
 \section{Trabajo Futuro}
-El proyecto sienta bases sólidas y abre varias líneas de investigación y desarrollo para extender su utilidad:
+El proyecto sienta bases sólidas y abre varias líneas de investigación y desarrollo para extender su utilidad y profundizar en el análisis de comportamiento humano:
 
 \subsection{Extensión del Análisis Comportamental}
 \begin{itemize}
-	\item \textbf{Identificación de roles y patrones:} Implementar análisis para diferenciar si un individuo está quieto, caminando solo o esperando. Esto añadiría una capa semántica al estado de la persona, crucial para modelos de comunicación que penalizan la movilidad.
-	\item \textbf{Análisis de trayectorias:} Desarrollar módulos para calcular la trayectoria promedio de los grupos y el vector de velocidad promedio, enriqueciendo la caracterización del movimiento colectivo más allá de solo la existencia del grupo.
+	\item \textbf{Identificación de roles y patrones:} Implementar análisis para diferenciar si un individuo está quieto, caminando solo o esperando. Esto añadiría una capa semántica al estado de la persona, crucial para modelos de comunicación que penalizan la movilidad. Dado que se han identificado grupos de hasta 12 minutos de duración, caracterizar estos comportamientos estáticos permitiría una comprensión más profunda de las dinámicas de interacción.
+	
+	\item \textbf{Análisis de trayectorias y vectores de movimiento:} Desarrollar módulos para calcular la trayectoria promedio de los grupos, el vector de velocidad promedio y métricas de dispersión espacial, enriqueciendo la caracterización del movimiento colectivo más allá de solo la existencia del grupo. Esta información es fundamental para predecir encuentros futuros y modelar la conectividad en redes móviles.
+	
+	\item \textbf{Clasificación de eventos y anomalías:} Utilizar los patrones identificados (como el pico de actividad en mayo 26-29) para desarrollar algoritmos de detección automática de eventos especiales, aglomeraciones anormales o comportamientos atípicos que puedan requerir intervención o análisis adicional.
+	
+	\item \textbf{Análisis de dinámicas intra-grupo:} Estudiar la formación, disolución y reconfiguración de grupos a lo largo del tiempo, identificando patrones de fusión y división que son relevantes para entender la dinámica social y la propagación de información.
 \end{itemize}
 
 \subsection{Optimización y Despliegue}
 \begin{itemize}
-	\item \textbf{Integración de base de datos espaciotemporal:} Migrar la base de datos a un esquema que aproveche extensiones espaciales (como PostGIS) para permitir consultas complejas basadas en geometría y tiempo (ej., ``¿Cuántos grupos pasaron por el área X entre las 10:00 y las 10:15?'').
-	\item \textbf{Aceleración en GPU:} Investigar librerías de aceleración de video basadas en GPU (como NVIDIA's V-SDK o cuStream) para el decodificador de video, trasladando completamente el cuello de botella de E/S y \textit{decoding} a la GPU.
+	\item \textbf{Integración de base de datos espaciotemporal:} Migrar la base de datos a un esquema que aproveche extensiones espaciales (como PostGIS) para permitir consultas complejas basadas en geometría y tiempo (ej., ``¿Cuántos grupos pasaron por el área X entre las 10:00 y las 10:15?'', ``¿Cuál es la densidad promedio en la zona Y durante eventos especiales?''). Esto facilitaría el análisis exploratorio y la generación de visualizaciones interactivas.
+	
+	\item \textbf{Aceleración en GPU y optimización del pipeline:} Investigar librerías de aceleración de video basadas en GPU (como NVIDIA's Video Codec SDK o cuStream) para el decodificador de video, trasladando completamente el cuello de botella de E/S y \textit{decoding} a la GPU. Dado el volumen procesado (51+ horas), optimizaciones adicionales podrían reducir significativamente el tiempo de análisis.
+	
+	\item \textbf{Procesamiento en tiempo real:} Explorar la adaptación del sistema para procesamiento en tiempo real de \textit{streams} de video, lo que permitiría aplicaciones de monitoreo en vivo, detección de eventos y respuesta inmediata a situaciones de interés.
+	
+	\item \textbf{Escalamiento a múltiples GPUs:} Dado el éxito del procesamiento concurrente, investigar estrategias de distribución de carga entre múltiples GPUs para procesar volúmenes aún mayores o reducir el tiempo de procesamiento de conjuntos de datos grandes.
 \end{itemize}
 
 \subsection{Validación y Calibración del Modelo}
 \begin{itemize}
-	\item \textbf{Correlación con datos reales:} Utilizar los datos de agrupamiento obtenidos para calibrar y validar el modelo de movilidad de la red de comunicaciones. Por ejemplo, ajustar los parámetros de encuentro y desconexión en la simulación basados en las duraciones de grupo observadas (los 952 grupos detectados).
-	\item \textbf{Estudio de robustez:} Evaluar cómo los cambios en los hiperparámetros del algoritmo de agrupamiento ($\tau$ y la distancia de proximidad) modifican la cantidad y duración de los grupos, permitiendo establecer los umbrales óptimos para diferentes escenarios de afluencia.
+	\item \textbf{Correlación con datos reales de conectividad:} Utilizar los datos de agrupamiento obtenidos (92,089 grupos detectados con duraciones detalladas) para calibrar y validar modelos de movilidad de redes de comunicación oportunista. Por ejemplo, ajustar los parámetros de encuentro y desconexión en la simulación basados en las duraciones de grupo observadas, particularmente los casos extremos (7 \textit{frames} a 21,514 \textit{frames}).
+	
+	\item \textbf{Estudio de robustez y sensibilidad:} Evaluar cómo los cambios en los hiperparámetros del algoritmo de agrupamiento ($\tau$ y la distancia de proximidad) modifican la cantidad y duración de los grupos, permitiendo establecer los umbrales óptimos para diferentes escenarios de afluencia. El conjunto de datos de 180 videos proporciona una base estadística suficiente para estos análisis de sensibilidad.
+	
+	\item \textbf{Validación cruzada con otros datasets:} Comparar los patrones identificados (ratio 1:3.0, duraciones típicas, comportamientos estacionales) con otros conjuntos de datos de movilidad humana para validar la generalidad de los hallazgos y establecer si los patrones observados son específicos del sitio o representan comportamientos universales.
+	
+	\item \textbf{Modelado predictivo:} Desarrollar modelos de \textit{machine learning} que utilicen los datos históricos (mayo-noviembre) para predecir densidades futuras, formación de grupos y patrones de movilidad, lo que sería útil para planificación urbana, gestión de eventos y optimización de recursos.
+	
+	\item \textbf{Análisis de correlación con factores externos:} Correlacionar los patrones de densidad y agrupamiento con factores externos como condiciones meteorológicas, eventos programados, días de la semana, y horarios, para entender mejor los determinantes del comportamiento observado.
 \end{itemize}
+
+\subsection{Aplicaciones Prácticas y Transferencia de Conocimiento}
+\begin{itemize}
+	\item \textbf{Planificación urbana:} Utilizar los patrones identificados para informar decisiones de diseño de espacios públicos, gestión de flujos peatonales y planificación de infraestructura.
+	
+	\item \textbf{Gestión de eventos masivos:} Aplicar los conocimientos sobre formación de grupos y densidades extremas (como las observadas en mayo) para mejorar la seguridad y eficiencia en eventos públicos de gran escala.
+	
+	\item \textbf{Simulación de redes de comunicación:} Integrar los datos reales de movilidad y agrupamiento en simuladores de redes vehiculares (VANET) o redes de dispositivos móviles para evaluar protocolos de comunicación en escenarios realistas.
+	
+	\item \textbf{Estudios epidemiológicos:} Adaptar el análisis de proximidad y persistencia para estudiar patrones de contacto relevantes para la propagación de enfermedades infecciosas en espacios públicos.
+\end{itemize}
+
+\section{Reflexión Final}
+Este proyecto ha demostrado que el análisis automatizado de video aéreo a gran escala es no solo técnicamente viable, sino también científicamente valioso para comprender el comportamiento humano en espacios públicos. Los \textbf{273,984 individuos rastreados} y \textbf{92,089 grupos detectados} a lo largo de \textbf{51 horas de video} constituyen una contribución significativa al campo, proporcionando datos empíricos cuantitativos que pueden informar tanto la investigación académica como aplicaciones prácticas en planificación urbana, gestión de espacios públicos y diseño de sistemas de comunicación.
+
+La consistencia de los patrones observados (ratio 1:3.0, duraciones características, respuesta a densidad) valida la metodología propuesta y sugiere que los hallazgos tienen relevancia más allá del caso de estudio específico. El sistema desarrollado está preparado para escalar a volúmenes aún mayores de datos y para adaptarse a diferentes contextos y aplicaciones, cumpliendo así el objetivo de crear una herramienta robusta y flexible para el análisis de movilidad y comportamiento social.
