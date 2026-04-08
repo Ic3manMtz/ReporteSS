@@ -146,7 +146,7 @@ apt-get install -y python3-pip libgl1-mesa-glx libglib2.0-0 postgresql-client &&
 update-alternatives --install /usr/bin/python python /usr/bin/python3 1 &&
 pip3 install --no-cache-dir torch torchvision --index-url https://download.pytorch.org/whl/cu121 &&
 pip3 install --no-cache-dir -r requirements.txt &&
-echo 'Esperando a que PostgreSQL esé listo...' &&
+echo 'Esperando a que PostgreSQL este listo...' &&
 until pg_isready -h postgres -p 5432 -U postgres; do
 echo 'PostgreSQL no est listo - esperando...'
 sleep 2
